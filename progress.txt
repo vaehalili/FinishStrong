@@ -56,3 +56,18 @@ Thread: https://ampcode.com/threads/T-019bb7b7-d1cd-77ed-b116-75eee5c6c4e6
   - Use db.table.count() to check if seeding needed
   - onMount in layout is good place for one-time initialization
 ---
+
+## 2026-01-13 - validation-1
+Thread: https://ampcode.com/threads/T-019bb7b9-2da0-767b-b984-b68a19838158
+- Created validation module in src/lib/validation/index.ts
+- LIMITS constant with all validation bounds (INPUT_MAX_LENGTH: 300, QUERY_MAX_LENGTH: 500, WEIGHT: 0-500, REPS: 1-100, SETS: 1-50)
+- Input validators: validateInputLength, validateQueryLength
+- Bounds validators: validateWeight, validateReps, validateSets
+- LLM response validators: validateParsedExercise, validateLLMResponse
+- 37 unit tests all passing in src/lib/validation/index.test.ts
+- Files created: src/lib/validation/index.ts, src/lib/validation/index.test.ts
+- **Learnings for future iterations:**
+  - Use explicit null/undefined checks instead of falsy for empty string edge cases
+  - Vitest is configured and runs with `npm run test -- --run`
+  - Export types (ParsedExercise, ParsedResponse) for use by API endpoints
+---
