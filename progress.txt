@@ -44,3 +44,15 @@ Thread: https://ampcode.com/threads/T-019bb7b2-95e1-76d4-a3e6-14be44520874
   - Dexie EntityTable requires specifying the primary key field as second type param
   - Export types and utilities from index.ts for cleaner imports
 ---
+
+## 2026-01-13 - db-2
+Thread: https://ampcode.com/threads/T-019bb7b7-d1cd-77ed-b116-75eee5c6c4e6
+- Created seed data for 30 common strength exercises in src/lib/db/seed.ts
+- Exercises organized by muscle group: Chest, Back, Shoulders, Arms, Legs, Core
+- seedExercises() checks table count before seeding (only runs if empty)
+- Seeding called from +layout.svelte onMount
+- Files created: src/lib/db/seed.ts
+- **Learnings for future iterations:**
+  - Use db.table.count() to check if seeding needed
+  - onMount in layout is good place for one-time initialization
+---
