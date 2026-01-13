@@ -32,3 +32,15 @@ Thread: https://ampcode.com/threads/T-019bb7b1-7b62-73db-9aad-e1429cea892f
   - .env.example uses placeholder values; actual secrets go in .env (gitignored)
   - SvelteKit uses PUBLIC_ prefix for client-accessible env vars
 ---
+
+## 2026-01-13 - db-1
+Thread: https://ampcode.com/threads/T-019bb7b2-95e1-76d4-a3e6-14be44520874
+- Created Dexie database with exercises, entries, sessions, parseQueue tables
+- TypeScript interfaces defined for all entities in src/lib/db/types.ts
+- UUID generation with crypto.randomUUID() + fallback for non-secure contexts in src/lib/db/utils.ts
+- Indexes added for sync queries: updatedAt, synced, sessionId, date, status
+- Files created: src/lib/db/index.ts, src/lib/db/types.ts, src/lib/db/utils.ts
+- **Learnings for future iterations:**
+  - Dexie EntityTable requires specifying the primary key field as second type param
+  - Export types and utilities from index.ts for cleaner imports
+---
