@@ -1,14 +1,14 @@
 <script lang="ts">
 </script>
 
-<div class="log-page">
+<div class="dashboard-page">
   <div class="content">
-    <p class="empty-state">No exercises logged yet today</p>
+    <p class="empty-state">Your workout stats and progress</p>
   </div>
 </div>
 
 <style>
-  .log-page {
+  .dashboard-page {
     display: flex;
     flex-direction: column;
     height: 100%;

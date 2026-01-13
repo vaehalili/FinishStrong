@@ -1,14 +1,14 @@
 <script lang="ts">
 </script>
 
-<div class="log-page">
+<div class="ask-page">
   <div class="content">
-    <p class="empty-state">No exercises logged yet today</p>
+    <p class="empty-state">Ask questions about your workout history</p>
   </div>
 </div>
 
 <style>
-  .log-page {
+  .ask-page {
     display: flex;
     flex-direction: column;
     height: 100%;
