@@ -23,3 +23,4 @@ export const db = new FinishStrongDB();
 
 export * from './types';
 export { generateId } from './utils';
+export { seedExercises } from './seed';
