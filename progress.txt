@@ -21,3 +21,14 @@ Thread: https://ampcode.com/threads/T-019bb7ae-94fe-7208-ad45-1437450c2de3
   - Manual SvelteKit project creation is more reliable than interactive `sv create` in automated contexts
   - PWA icons (pwa-192x192.png, pwa-512x512.png, apple-touch-icon.png) need to be added to static/ folder later
 ---
+
+## 2026-01-13 - setup-2
+Thread: https://ampcode.com/threads/T-019bb7b1-7b62-73db-9aad-e1429cea892f
+- Created .env.example file with required environment variables
+- ANTHROPIC_API_KEY for Claude Haiku API access
+- PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY for Supabase cloud sync
+- Verified .gitignore already excludes .env files (keeps secrets safe)
+- **Learnings for future iterations:**
+  - .env.example uses placeholder values; actual secrets go in .env (gitignored)
+  - SvelteKit uses PUBLIC_ prefix for client-accessible env vars
+---
