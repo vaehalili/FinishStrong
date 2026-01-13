@@ -1,0 +1,615 @@
+{
+  "project": "FinishStrong",
+  "branchName": "ralph/finishstrong-p1",
+  "description": "Voice-first exercise tracker PWA with LLM parsing, historical data view, prompt logging, and authentication",
+  "userStories": [
+    {
+      "id": "setup-1",
+      "title": "Project scaffolding",
+      "description": "Create SvelteKit project with required dependencies",
+      "acceptanceCriteria": [
+        "SvelteKit 5 project created with TypeScript",
+        "Dependencies installed: dexie, @anthropic-ai/sdk, @supabase/supabase-js",
+        "PWA configured with vite-plugin-pwa",
+        "Dark theme CSS variables set up",
+        "Dev server runs without errors"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "setup-2",
+      "title": "Environment configuration",
+      "description": "Set up environment variables for API keys",
+      "acceptanceCriteria": [
+        ".env.example file created with required variables",
+        "ANTHROPIC_API_KEY configured",
+        "PUBLIC_SUPABASE_URL configured",
+        "PUBLIC_SUPABASE_ANON_KEY configured"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "db-1",
+      "title": "Local database schema",
+      "description": "Create Dexie database with all required tables",
+      "acceptanceCriteria": [
+        "Dexie database created with exercises, entries, sessions, parseQueue tables",
+        "UUID generation function works in secure and non-secure contexts",
+        "Indexes added for sync queries (updatedAt)",
+        "TypeScript interfaces defined for all entities"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "db-2",
+      "title": "Seed exercises",
+      "description": "Create seed data for common exercises",
+      "acceptanceCriteria": [
+        "25-30 common strength exercises seeded on first load",
+        "Exercises have id, name (normalized), and displayName",
+        "Seeding only runs if exercises table is empty"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "validation-1",
+      "title": "Input/output validation",
+      "description": "Create validation functions for user input and LLM output",
+      "acceptanceCriteria": [
+        "Input length validation (max 300 chars for entries, 500 for queries)",
+        "LLM response schema validation",
+        "Bounds checking: weight 0-500kg, reps 1-100, sets 1-50",
+        "Unit tests pass for all validators"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "api-1",
+      "title": "Parse API endpoint",
+      "description": "Create endpoint that parses exercise input via Claude Haiku",
+      "acceptanceCriteria": [
+        "POST /api/parse accepts { input: string }",
+        "Sends to Claude Haiku with exercise parsing prompt",
+        "Returns { success: true, data: ParsedExercise[] }",
+        "Handles multi-exercise input",
+        "Strips markdown code blocks from LLM response",
+        "Returns appropriate error for invalid input"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "ui-1",
+      "title": "App layout and navigation",
+      "description": "Create mobile-first layout with bottom tab navigation",
+      "acceptanceCriteria": [
+        "Bottom tab nav with Log, Ask, Dashboard tabs",
+        "App header with logo, page title, date display, status indicator",
+        "Dark theme styling applied",
+        "Layout renders correctly on mobile viewport"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "ui-2",
+      "title": "Log page - text input",
+      "description": "Create main logging page with text input",
+      "acceptanceCriteria": [
+        "Text input at bottom of screen (thumb-reachable)",
+        "Submit button triggers parse API",
+        "Entry appears in list after successful parse",
+        "Multiple exercises in one input create multiple entries",
+        "Loading state shown during parse"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "session-1",
+      "title": "Session management",
+      "description": "Auto-create and manage workout sessions",
+      "acceptanceCriteria": [
+        "Session auto-created on first entry",
+        "Session name based on time of day (Morning/Afternoon/Evening/Night)",
+        "Active session tracked in store",
+        "Entries linked to active session"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "session-2",
+      "title": "Stale session handling",
+      "description": "Auto-end sessions with no activity for 2 hours",
+      "acceptanceCriteria": [
+        "Session marked stale if no entries for 2 hours",
+        "Stale sessions auto-ended when user logs next entry",
+        "New session created after stale session ends"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "ui-3",
+      "title": "Session card display",
+      "description": "Display session with its entries",
+      "acceptanceCriteria": [
+        "Session card shows session name and date",
+        "Entries displayed within session card",
+        "Each entry shows exercise name, weight, reps, sets",
+        "Session card is expandable/collapsible"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "offline-1",
+      "title": "Online/offline detection",
+      "description": "Track and display network status",
+      "acceptanceCriteria": [
+        "Online/offline state tracked in store",
+        "Offline indicator visible in header when disconnected",
+        "State updates when network changes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "offline-2",
+      "title": "Parse queue for offline",
+      "description": "Queue inputs when offline for later processing",
+      "acceptanceCriteria": [
+        "When offline, raw input saved to parseQueue",
+        "Queue items have pending/parsed/failed status",
+        "Pending indicator shown for queued entries"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "offline-3",
+      "title": "Process queue on reconnect",
+      "description": "Process queued inputs when back online",
+      "acceptanceCriteria": [
+        "Queue automatically processed when online",
+        "Each item sent through parse API",
+        "Successful parses create entries and mark item parsed",
+        "Failed parses mark item failed"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "voice-1",
+      "title": "Voice input",
+      "description": "Add voice input via Web Speech API",
+      "acceptanceCriteria": [
+        "Mic button visible in input area",
+        "Tap to start recording, tap again to stop",
+        "Transcript appears in input field",
+        "Auto-submit on stop",
+        "Works with continuous mode enabled"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "sync-1",
+      "title": "Supabase client setup",
+      "description": "Configure Supabase client",
+      "acceptanceCriteria": [
+        "Supabase client initialized with env variables",
+        "Client accessible from lib module"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "sync-2",
+      "title": "Push to Supabase",
+      "description": "Sync unsynced records to Supabase",
+      "acceptanceCriteria": [
+        "Batch upsert for sessions, entries, exercises",
+        "Only unsynced records pushed",
+        "Synced flag set to true after successful push",
+        "Exercises only synced if referenced by entries"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "sync-3",
+      "title": "Pull from Supabase",
+      "description": "Pull remote changes to local",
+      "acceptanceCriteria": [
+        "Pull exercises, sessions, entries from Supabase",
+        "Only pull records newer than last sync",
+        "Last-write-wins conflict resolution",
+        "Local records updated with remote data"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "sync-4",
+      "title": "Debounced sync",
+      "description": "Prevent excessive sync calls",
+      "acceptanceCriteria": [
+        "Sync debounced by 2 seconds",
+        "Concurrent sync prevented with flag",
+        "Sync triggers on data changes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "query-1",
+      "title": "Query API endpoint",
+      "description": "Create endpoint for asking questions about workout history",
+      "acceptanceCriteria": [
+        "POST /api/query accepts { query: string, entries: EntryData[] }",
+        "Sends question + history to Claude Haiku",
+        "Returns { success: true, answer: string }",
+        "Validates query length"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "query-2",
+      "title": "Ask page UI",
+      "description": "Create Ask page for querying workout history",
+      "acceptanceCriteria": [
+        "Text input for questions",
+        "Voice input (same pattern as Log page)",
+        "Answer displayed after query",
+        "4 suggested questions as quick buttons",
+        "Offline warning shown when disconnected"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "dashboard-1",
+      "title": "Dashboard stats",
+      "description": "Display workout statistics",
+      "acceptanceCriteria": [
+        "Total workouts count",
+        "Total exercises count",
+        "Unique exercise types count",
+        "This week's workouts count"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "dashboard-2",
+      "title": "Progress chart",
+      "description": "Show weight progression over time",
+      "acceptanceCriteria": [
+        "Exercise selector dropdown",
+        "Line chart shows max weight per workout date",
+        "SVG-based chart (no external library)",
+        "Chart updates when exercise selection changes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "dashboard-3",
+      "title": "Workout frequency chart",
+      "description": "Show workouts per week",
+      "acceptanceCriteria": [
+        "Bar chart shows workouts per week",
+        "Last 8 weeks displayed",
+        "SVG-based chart"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "export-1",
+      "title": "Data export",
+      "description": "Export workout data to CSV and JSON",
+      "acceptanceCriteria": [
+        "CSV export with columns: Date, Session, Exercise, Weight, Reps, Sets",
+        "JSON export with full data structure",
+        "Download buttons on Dashboard"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "edit-1",
+      "title": "Entry editing",
+      "description": "Edit existing entries inline",
+      "acceptanceCriteria": [
+        "Edit button on each entry",
+        "Inline form with exercise dropdown, weight, reps, sets inputs",
+        "Save and cancel buttons",
+        "Entry updates in database and UI"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "edit-2",
+      "title": "Entry deletion",
+      "description": "Delete entries with confirmation",
+      "acceptanceCriteria": [
+        "Delete button on each entry",
+        "Entry removed from database and UI",
+        "Deletion synced to Supabase"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "edit-3",
+      "title": "Session editing",
+      "description": "Edit session name, date, notes",
+      "acceptanceCriteria": [
+        "Edit button on session card",
+        "Modal form for name, date, notes",
+        "Session updates in database and UI"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "edit-4",
+      "title": "Session deletion",
+      "description": "Delete session with all entries",
+      "acceptanceCriteria": [
+        "Delete button on session card",
+        "Two-step confirmation (Delete -> Confirm)",
+        "Session and all entries removed",
+        "Deletion synced to Supabase"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "edit-5",
+      "title": "End session manually",
+      "description": "Allow user to end active session",
+      "acceptanceCriteria": [
+        "End Session button visible for active session",
+        "Session endedAt set on click",
+        "Session moves from active to history"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "history-1",
+      "title": "Date navigation UI",
+      "description": "Add date navigation to browse historical data",
+      "acceptanceCriteria": [
+        "Arrow buttons for previous/next day navigation",
+        "Date picker popup for jumping to specific dates",
+        "Prominent date display in header showing current viewing date",
+        "Today button to quickly return to current date"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "history-2",
+      "title": "View past sessions",
+      "description": "Display sessions for any selected date",
+      "acceptanceCriteria": [
+        "Navigate to any date and see that date's sessions",
+        "Same session card format as today view",
+        "Empty state shown if no sessions for selected date",
+        "Sessions load from local database"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "history-3",
+      "title": "Log to displayed date",
+      "description": "New entries go to the date shown in UI",
+      "acceptanceCriteria": [
+        "When viewing past date, new entries use that date (not today)",
+        "Enables backdating forgotten workouts",
+        "Date shown in header clearly indicates where entries will go",
+        "viewingDate store tracks current context date"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "history-4",
+      "title": "Session creation for past dates",
+      "description": "Create sessions when logging to dates without sessions",
+      "acceptanceCriteria": [
+        "When logging to past date with no session, create new session for that date",
+        "Session uses time-based naming (Morning/Afternoon/Evening/Night)",
+        "Session date matches the viewing date, not current time"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "promptlog-1",
+      "title": "Prompt log table",
+      "description": "Create Supabase table for logging LLM requests",
+      "acceptanceCriteria": [
+        "Supabase table created: prompt_logs",
+        "Columns: id (UUID), timestamp, raw_input, parsed_output (JSON), success (boolean), latency_ms (integer), model (string)",
+        "Table accessible for inserts from API"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "promptlog-2",
+      "title": "Log parse requests",
+      "description": "Record each parse API call to prompt_logs",
+      "acceptanceCriteria": [
+        "After each /api/parse call, log to prompt_logs table",
+        "Capture: timestamp, raw input, parsed output, success status, response latency, model used",
+        "Logging does not block or slow down the parse response",
+        "Failed logs do not break the parse endpoint"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "promptlog-3",
+      "title": "View logs in Supabase",
+      "description": "Use Supabase dashboard to view and filter logs",
+      "acceptanceCriteria": [
+        "Logs visible in Supabase dashboard",
+        "Can filter by success/failure",
+        "Can sort by timestamp",
+        "No custom UI needed in app"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "auth-1",
+      "title": "Supabase Auth setup",
+      "description": "Configure Supabase Auth with email/password",
+      "acceptanceCriteria": [
+        "Supabase Auth enabled with email/password provider",
+        "Auth client configured in app",
+        "Environment variables set for auth"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "auth-2",
+      "title": "Login/Signup UI",
+      "description": "Create login and signup forms",
+      "acceptanceCriteria": [
+        "Login page with email and password fields",
+        "Signup page with email and password fields",
+        "Error handling for invalid credentials",
+        "Loading states during auth operations",
+        "Redirect to Log page after successful auth"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "auth-3",
+      "title": "Session persistence",
+      "description": "Maintain auth state across app restarts",
+      "acceptanceCriteria": [
+        "Auth state persists when app is closed and reopened",
+        "Auto-refresh of auth tokens",
+        "Logout functionality clears session",
+        "Protected routes redirect to login if not authenticated"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "auth-4",
+      "title": "User ID on records",
+      "description": "Associate data with authenticated user",
+      "acceptanceCriteria": [
+        "Add user_id column to entries table",
+        "Add user_id column to sessions table",
+        "Set user_id on create for new records",
+        "Existing local data associated with user on first login"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "auth-5",
+      "title": "Row Level Security",
+      "description": "Ensure users only see their own data",
+      "acceptanceCriteria": [
+        "RLS policies enabled on entries table",
+        "RLS policies enabled on sessions table",
+        "Users can only read/write their own records",
+        "Sync respects user isolation"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "test-1",
+      "title": "Unit tests for validation",
+      "description": "Write Vitest tests for validation functions",
+      "acceptanceCriteria": [
+        "Tests for input length validation",
+        "Tests for output schema validation",
+        "Tests for bounds checking",
+        "All tests pass"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "test-2",
+      "title": "Mock data generator",
+      "description": "Create utility to generate test data",
+      "acceptanceCriteria": [
+        "Generate 30 days of workouts",
+        "3-5 sessions per week",
+        "4-8 exercises per session",
+        "Callable via window.generateMockData()"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

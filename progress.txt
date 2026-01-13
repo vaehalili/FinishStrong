@@ -1,0 +1,8 @@
+# Ralph Progress Log
+Started: (new session)
+---
+
+## Codebase Patterns
+(patterns discovered during implementation will be added here)
+
+---
