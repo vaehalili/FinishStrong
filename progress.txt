@@ -71,3 +71,19 @@ Thread: https://ampcode.com/threads/T-019bb7b9-2da0-767b-b984-b68a19838158
   - Vitest is configured and runs with `npm run test -- --run`
   - Export types (ParsedExercise, ParsedResponse) for use by API endpoints
 ---
+
+## 2026-01-13 - api-1
+Thread: https://ampcode.com/threads/T-019bb7bb-fea2-7713-aeab-660d5fcf859d
+- Created POST /api/parse endpoint in src/routes/api/parse/+server.ts
+- Uses Claude Haiku (claude-haiku-4-5-20251001) for exercise parsing
+- Implements the exact PARSE_PROMPT from AGENTS.md
+- Strips markdown code blocks from LLM response (handles ```json wrapper)
+- Validates input length and LLM response schema using existing validators
+- Returns { success: true, data: ParsedExercise[] } on success
+- Created .env file with placeholder values for typecheck to pass
+- Files created: src/routes/api/parse/+server.ts, .env
+- **Learnings for future iterations:**
+  - SvelteKit requires .env file to exist for $env/static/private imports to typecheck
+  - Use system parameter instead of prepending prompt to user message with Anthropic SDK
+  - .env is gitignored, so placeholder values are safe for development
+---

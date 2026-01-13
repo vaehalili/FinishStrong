@@ -86,7 +86,7 @@
         "Returns appropriate error for invalid input"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
