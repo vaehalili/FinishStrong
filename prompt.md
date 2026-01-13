@@ -2,6 +2,19 @@
 
 You are an autonomous coding agent working on a software project.
 
+## CRITICAL: Workspace Boundaries
+
+You MUST only read, write, and modify files within this project directory:
+`/Users/drew/Desktop/Personal Projects/FinishStrong/`
+
+Do NOT access, read, or modify:
+- Any files outside this project folder
+- Home directory files (~/.ssh, ~/.config, ~/.env, etc.)
+- System files
+- Other projects
+
+If a task seems to require accessing files outside this folder, skip it and note the issue in progress.txt.
+
 ## Your Task
 
 1. Read the PRD at `prd.json` (in the same directory as this file)
