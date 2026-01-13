@@ -3,6 +3,21 @@ Started: (new session)
 ---
 
 ## Codebase Patterns
-(patterns discovered during implementation will be added here)
+- Use `npm run check` to typecheck the project
+- Dark theme CSS variables are in `src/app.css` (--bg-darkest, --bg-dark, --bg-medium, --orange-accent, --green-primary, --red-destructive)
+- SvelteKit 5 uses `$props()` for component props in `<script lang="ts">` blocks
 
+---
+
+## 2026-01-13 10:09 PM - setup-1
+Thread: https://ampcode.com/threads/T-019bb7ae-94fe-7208-ad45-1437450c2de3
+- Created SvelteKit 5 project with TypeScript
+- Installed dependencies: dexie, @anthropic-ai/sdk, @supabase/supabase-js, vite-plugin-pwa
+- Configured PWA in vite.config.ts with manifest and workbox settings
+- Set up dark theme CSS variables in src/app.css (colors from AGENTS.md)
+- Verified dev server runs without errors
+- Files created: package.json, tsconfig.json, svelte.config.js, vite.config.ts, src/app.html, src/app.css, src/app.d.ts, src/routes/+layout.svelte, src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Manual SvelteKit project creation is more reliable than interactive `sv create` in automated contexts
+  - PWA icons (pwa-192x192.png, pwa-512x512.png, apple-touch-icon.png) need to be added to static/ folder later
 ---
