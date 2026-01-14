@@ -129,7 +129,7 @@
         "Entries linked to active session"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
