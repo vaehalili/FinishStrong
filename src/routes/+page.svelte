@@ -2,6 +2,7 @@
 	import { db, generateId, getOrCreateActiveSession, type Entry, type Exercise, type Session, type ParseQueueItem } from '$lib/db';
 	import { activeSession } from '$lib/stores/session';
 	import { isOnline } from '$lib/stores/online';
+	import { viewingDate } from '$lib/stores/viewingDate';
 	import { addToParseQueue, processQueue, getPendingQueueItems } from '$lib/queue';
 	import { LIMITS } from '$lib/validation';
 	import { onMount } from 'svelte';
@@ -23,7 +24,53 @@
 	let recognition: SpeechRecognition | null = $state(null);
 	let speechSupported = $state(false);
 
-	const today = new Date().toISOString().split('T')[0];
+	let currentViewingDate = $state(get(viewingDate));
+
+	function loadDataForDate(date: string) {
+		const sessionSubscription = liveQuery(() =>
+			db.sessions.where('date').equals(date).toArray()
+		).subscribe({
+			next: (sessionList) => {
+				sessions = sessionList.sort(
+					(a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+				);
+			}
+		});
+
+		const entrySubscription = liveQuery(() =>
+			db.entries.where('createdAt').startsWith(date).toArray()
+		).subscribe({
+			next: async (entryList) => {
+				const withExercises = await Promise.all(
+					entryList.map(async (entry) => {
+						const exercise = await db.exercises.get(entry.exerciseId);
+						return { ...entry, exercise };
+					})
+				);
+				
+				const grouped = new Map<string, (Entry & { exercise?: Exercise })[]>();
+				for (const entry of withExercises) {
+					const existing = grouped.get(entry.sessionId) || [];
+					existing.push(entry);
+					grouped.set(entry.sessionId, existing);
+				}
+				
+				for (const [sessionId, entries] of grouped) {
+					grouped.set(
+						sessionId,
+						entries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+					);
+				}
+				
+				entriesBySession = grouped;
+			}
+		});
+
+		return () => {
+			sessionSubscription.unsubscribe();
+			entrySubscription.unsubscribe();
+		};
+	}
 
 	onMount(() => {
 		if (browser) {
@@ -62,42 +109,13 @@
 			}
 		}
 
-		const sessionSubscription = liveQuery(() =>
-			db.sessions.where('date').equals(today).toArray()
-		).subscribe({
-			next: (sessionList) => {
-				sessions = sessionList.sort(
-					(a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
-				);
-			}
-		});
+		let dataCleanup = loadDataForDate(currentViewingDate);
 
-		const entrySubscription = liveQuery(() =>
-			db.entries.where('createdAt').startsWith(today).toArray()
-		).subscribe({
-			next: async (entryList) => {
-				const withExercises = await Promise.all(
-					entryList.map(async (entry) => {
-						const exercise = await db.exercises.get(entry.exerciseId);
-						return { ...entry, exercise };
-					})
-				);
-				
-				const grouped = new Map<string, (Entry & { exercise?: Exercise })[]>();
-				for (const entry of withExercises) {
-					const existing = grouped.get(entry.sessionId) || [];
-					existing.push(entry);
-					grouped.set(entry.sessionId, existing);
-				}
-				
-				for (const [sessionId, entries] of grouped) {
-					grouped.set(
-						sessionId,
-						entries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-					);
-				}
-				
-				entriesBySession = grouped;
+		const viewingDateSubscription = viewingDate.subscribe((date) => {
+			if (date !== currentViewingDate) {
+				currentViewingDate = date;
+				dataCleanup();
+				dataCleanup = loadDataForDate(date);
 			}
 		});
 
@@ -127,8 +145,8 @@
 		});
 
 		return () => {
-			sessionSubscription.unsubscribe();
-			entrySubscription.unsubscribe();
+			dataCleanup();
+			viewingDateSubscription();
 			queueSubscription.unsubscribe();
 			onlineSubscription();
 			if (recognition) {
@@ -185,7 +203,7 @@
 
 			const now = new Date().toISOString();
 
-			const session = await getOrCreateActiveSession(today);
+			const session = await getOrCreateActiveSession(currentViewingDate);
 			activeSession.set(session);
 
 			for (const parsed of result.data) {
@@ -251,7 +269,7 @@
 		{/if}
 
 		{#if sessions.length === 0 && pendingQueueItems.length === 0}
-			<p class="empty-state">No exercises logged yet today</p>
+			<p class="empty-state">No exercises logged for this date</p>
 		{:else if sessions.length > 0}
 			<div class="sessions-list">
 				{#each sessions as session (session.id)}
