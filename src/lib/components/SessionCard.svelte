@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Session, Entry, Exercise } from '$lib/db/types';
-	import { updateEntry, deleteEntry } from '$lib/db';
+	import { updateEntry, deleteEntry, updateSession } from '$lib/db';
 
 	interface Props {
 		session: Session;
@@ -15,8 +15,34 @@
 	let editReps = $state<number | null>(null);
 	let editSets = $state<number | null>(null);
 
+	let isEditingSession = $state(false);
+	let editSessionName = $state('');
+	let editSessionDate = $state('');
+	let editSessionNotes = $state('');
+
 	async function handleDelete(entryId: string) {
 		await deleteEntry(entryId);
+	}
+
+	function startSessionEdit(e: Event) {
+		e.stopPropagation();
+		editSessionName = session.name;
+		editSessionDate = session.date;
+		editSessionNotes = session.notes || '';
+		isEditingSession = true;
+	}
+
+	function cancelSessionEdit() {
+		isEditingSession = false;
+	}
+
+	async function saveSessionEdit() {
+		await updateSession(session.id, {
+			name: editSessionName,
+			date: editSessionDate,
+			notes: editSessionNotes || undefined
+		});
+		isEditingSession = false;
 	}
 
 	function formatEntry(entry: Entry & { exercise?: Exercise }): string {
@@ -79,13 +105,16 @@
 </script>
 
 <div class="session-card">
-	<button class="session-header" onclick={toggleExpanded}>
-		<div class="session-info">
-			<span class="session-name">{session.name}</span>
-			<span class="session-date">{formatSessionDate(session.date)}</span>
-		</div>
-		<span class="expand-icon" class:expanded={isExpanded}>▼</span>
-	</button>
+	<div class="session-header-row">
+		<button class="session-header" onclick={toggleExpanded}>
+			<div class="session-info">
+				<span class="session-name">{session.name}</span>
+				<span class="session-date">{formatSessionDate(session.date)}</span>
+			</div>
+			<span class="expand-icon" class:expanded={isExpanded}>▼</span>
+		</button>
+		<button class="btn-session-edit" onclick={startSessionEdit}>Edit</button>
+	</div>
 
 	{#if isExpanded}
 		<div class="session-entries">
@@ -159,6 +188,36 @@
 		</div>
 	{/if}
 </div>
+
+{#if isEditingSession}
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<div class="modal-overlay" onclick={cancelSessionEdit} role="presentation">
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<div class="modal-content" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" tabindex="-1">
+			<h3 class="modal-title">Edit Session</h3>
+			<form class="session-edit-form" onsubmit={(e) => { e.preventDefault(); saveSessionEdit(); }}>
+				<label class="form-field">
+					<span>Name</span>
+					<input type="text" bind:value={editSessionName} required maxlength="100" />
+				</label>
+				<label class="form-field">
+					<span>Date</span>
+					<input type="date" bind:value={editSessionDate} required />
+				</label>
+				<label class="form-field">
+					<span>Notes</span>
+					<textarea bind:value={editSessionNotes} rows="3" placeholder="Optional notes..."></textarea>
+				</label>
+				<div class="modal-actions">
+					<button type="button" class="btn-cancel" onclick={cancelSessionEdit}>Cancel</button>
+					<button type="submit" class="btn-save">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+{/if}
 
 <style>
 	.session-card {
@@ -375,5 +434,104 @@
 
 	.btn-save:hover {
 		opacity: 0.9;
+	}
+
+	.session-header-row {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.btn-session-edit {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		background: var(--bg-medium);
+		color: var(--text-secondary);
+		border: none;
+		border-radius: 0.375rem;
+		cursor: pointer;
+		flex-shrink: 0;
+		margin-right: 0.5rem;
+	}
+
+	.btn-session-edit:hover {
+		background: var(--orange-accent);
+		color: var(--bg-darkest);
+	}
+
+	.modal-overlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.7);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 100;
+		padding: 1rem;
+	}
+
+	.modal-content {
+		background: var(--bg-dark);
+		border-radius: 0.75rem;
+		padding: 1.25rem;
+		width: 100%;
+		max-width: 400px;
+	}
+
+	.modal-title {
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: var(--text-primary);
+		margin: 0 0 1rem 0;
+	}
+
+	.session-edit-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.form-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+
+	.form-field span {
+		font-size: 0.75rem;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.form-field input,
+	.form-field textarea {
+		padding: 0.625rem;
+		font-size: 0.9375rem;
+		background: var(--bg-medium);
+		color: var(--text-primary);
+		border: 1px solid transparent;
+		border-radius: 0.375rem;
+		width: 100%;
+		font-family: inherit;
+	}
+
+	.form-field input:focus,
+	.form-field textarea:focus {
+		outline: none;
+		border-color: var(--orange-accent);
+	}
+
+	.form-field textarea {
+		resize: vertical;
+		min-height: 60px;
+	}
+
+	.modal-actions {
+		display: flex;
+		gap: 0.5rem;
+		justify-content: flex-end;
+		margin-top: 0.5rem;
 	}
 </style>

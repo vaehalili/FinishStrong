@@ -30,7 +30,9 @@ export {
 	createSession,
 	getOrCreateActiveSession,
 	endSession,
-	isSessionStale
+	isSessionStale,
+	updateSession
 } from './sessions';
+export type { UpdateSessionData } from './sessions';
 export { updateEntry, deleteEntry } from './entries';
 export type { UpdateEntryData } from './entries';

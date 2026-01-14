@@ -90,3 +90,21 @@ export async function endSession(sessionId: string): Promise<void> {
 		updatedAt: now
 	});
 }
+
+export interface UpdateSessionData {
+	name?: string;
+	date?: string;
+	notes?: string;
+}
+
+/**
+ * Update session fields (name, date, notes)
+ */
+export async function updateSession(sessionId: string, data: UpdateSessionData): Promise<void> {
+	const now = new Date().toISOString();
+	await db.sessions.update(sessionId, {
+		...data,
+		updatedAt: now,
+		synced: false
+	});
+}
