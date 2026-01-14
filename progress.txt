@@ -294,3 +294,16 @@ Thread: https://ampcode.com/threads/T-019bbc8c-bdbd-7038-a19c-14ff47f0a654
   - Dexie's delete() method only requires the ID - simple and fast
   - liveQuery subscriptions in the parent component auto-update when entries are deleted
 ---
+
+## 2026-01-14 - edit-3
+Thread: https://ampcode.com/threads/T-019bbc8f-1e86-728c-ad4d-0950d9ea09d4
+- Implemented session editing with modal form
+- Added Edit button to session card header next to expand/collapse toggle
+- Created updateSession function in src/lib/db/sessions.ts
+- Modal form includes fields for Name, Date, and Notes
+- Modal overlay with click-to-close and accessible tabindex
+- Files created/modified: src/lib/db/sessions.ts, src/lib/db/index.ts, src/lib/components/SessionCard.svelte
+- **Learnings for future iterations:**
+  - Use svelte-ignore comments for a11y warnings on modal overlays (click to close is valid UX)
+  - Move role="dialog" and aria-modal to the inner modal-content div, use role="presentation" for overlay
+---
