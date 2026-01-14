@@ -24,7 +24,7 @@ CREATE POLICY "Allow inserts to prompt_logs" ON prompt_logs
     FOR INSERT
     WITH CHECK (true);
 
--- Policy: Only allow reads from service role (for dashboard viewing)
-CREATE POLICY "Allow service role reads" ON prompt_logs
-    FOR SELECT
-    USING (auth.role() = 'service_role');
+-- Note: The Supabase Dashboard uses the postgres/service_role which bypasses RLS.
+-- Logs are viewable in Dashboard > Table Editor > prompt_logs
+-- To filter: use the built-in filter UI (success = true/false)
+-- To sort: click on timestamp column header (default: newest first via index)
