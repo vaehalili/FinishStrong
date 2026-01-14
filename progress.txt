@@ -397,3 +397,18 @@ Thread: https://ampcode.com/threads/T-019bbca9-dc81-70d2-8c90-eb7c32fcb8a0
   - Track startTime at request start, compute latency at each exit point
   - Capture input early in rawInput variable for logging in catch blocks
 ---
+
+## 2026-01-14 - promptlog-3
+Thread: https://ampcode.com/threads/T-019bbcab-ef3c-762a-a869-014e28e0631f
+- Verified prompt_logs table has indexes for timestamp (DESC) and success columns
+- Removed incorrect auth.role() RLS policy for SELECT (dashboard uses postgres/service_role which bypasses RLS)
+- Added documentation comments in migration explaining how to view logs in Supabase Dashboard
+- Logs viewable at Dashboard > Table Editor > prompt_logs
+- Filter by clicking "Add filter" and selecting success = true/false
+- Sort by clicking timestamp column (index ensures fast DESC ordering)
+- Files modified: supabase/migrations/001_create_prompt_logs.sql
+- **Learnings for future iterations:**
+  - Supabase Dashboard uses postgres/service_role connection which bypasses RLS entirely
+  - No need for SELECT policies if only dashboard viewing is required
+  - Column indexes ensure fast filtering and sorting in dashboard UI
+---

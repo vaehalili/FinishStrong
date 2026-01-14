@@ -524,8 +524,8 @@
         "No custom UI needed in app"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Supabase Dashboard bypasses RLS via service_role. Table has indexes for timestamp (DESC) and success columns for efficient sorting/filtering. Updated migration with documentation."
     },
     {
       "id": "auth-1",
