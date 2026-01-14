@@ -496,8 +496,8 @@
         "Table accessible for inserts from API"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created promptLog.ts module with logPromptRequest function. Migration SQL in supabase/migrations/001_create_prompt_logs.sql with RLS policies allowing inserts."
     },
     {
       "id": "promptlog-2",

@@ -369,3 +369,17 @@ Thread: https://ampcode.com/threads/T-019bbc9e-a1b0-708b-87cc-b9807f7ec119
   - Keep a cleanup function reference and call it before creating new subscriptions
   - Implementing history-2 also covered history-3 and history-4 acceptance criteria
 ---
+
+## 2026-01-14 - promptlog-1
+Thread: https://ampcode.com/threads/T-019bbca7-8644-71d8-b627-d1822953af9e
+- Created prompt_logs table schema for Supabase
+- Created src/lib/supabase/promptLog.ts with logPromptRequest function and PromptLog interface
+- Created supabase/migrations/001_create_prompt_logs.sql with table schema and RLS policies
+- Table columns: id (UUID), timestamp, raw_input, parsed_output (JSONB), success, latency_ms, model
+- RLS allows inserts from anonymous users (for API logging) but only service_role reads
+- Exported logPromptRequest from src/lib/supabase/index.ts
+- **Learnings for future iterations:**
+  - Store Supabase migrations in supabase/migrations/ folder
+  - Use JSONB type for JSON columns in Postgres (better indexing than JSON)
+  - RLS insert policy uses WITH CHECK (true) to allow all inserts
+---
