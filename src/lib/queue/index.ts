@@ -1,6 +1,7 @@
 import { db, generateId, getOrCreateActiveSession, type ParseQueueItem, type Entry } from '$lib/db';
 import { activeSession } from '$lib/stores/session';
 import { getCurrentUserId } from '$lib/stores/auth';
+import { debouncedSync } from '$lib/supabase';
 
 let processingQueue = false;
 
@@ -104,6 +105,7 @@ export async function processQueue(): Promise<{ processed: number; failed: numbe
 
 				await markQueueItemParsed(item.id);
 				processed++;
+				debouncedSync();
 			} catch (err) {
 				await markQueueItemFailed(item.id, err instanceof Error ? err.message : 'Unknown error');
 				failed++;

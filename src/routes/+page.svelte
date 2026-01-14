@@ -5,6 +5,7 @@
 	import { viewingDate } from '$lib/stores/viewingDate';
 	import { getCurrentUserId } from '$lib/stores/auth';
 	import { addToParseQueue, processQueue, getPendingQueueItems } from '$lib/queue';
+	import { debouncedSync } from '$lib/supabase';
 	import { LIMITS } from '$lib/validation';
 	import { onMount } from 'svelte';
 	import { liveQuery } from 'dexie';
@@ -241,6 +242,7 @@
 				await db.entries.add(entry);
 			}
 
+			debouncedSync();
 			inputValue = '';
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'An error occurred';

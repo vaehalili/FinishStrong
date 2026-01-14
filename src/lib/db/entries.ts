@@ -1,4 +1,5 @@
 import { db } from './index';
+import { debouncedSync, deleteEntryFromSupabase } from '$lib/supabase';
 import type { Entry } from './types';
 
 export interface UpdateEntryData {
@@ -16,8 +17,10 @@ export async function updateEntry(id: string, data: UpdateEntryData): Promise<vo
 		updatedAt: now,
 		synced: false
 	});
+	debouncedSync();
 }
 
 export async function deleteEntry(id: string): Promise<void> {
 	await db.entries.delete(id);
+	deleteEntryFromSupabase(id).catch(console.error);
 }

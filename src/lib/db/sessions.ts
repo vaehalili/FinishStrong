@@ -1,5 +1,6 @@
 import { db } from './index';
 import { generateId } from './utils';
+import { debouncedSync } from '$lib/supabase';
 import type { Session } from './types';
 
 const STALE_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 hours
@@ -60,6 +61,7 @@ export async function createSession(date: string, userId?: string): Promise<Sess
 	};
 
 	await db.sessions.add(session);
+	debouncedSync();
 	return session;
 }
 
@@ -88,8 +90,10 @@ export async function endSession(sessionId: string): Promise<void> {
 	const now = new Date().toISOString();
 	await db.sessions.update(sessionId, {
 		endedAt: now,
-		updatedAt: now
+		updatedAt: now,
+		synced: false
 	});
+	debouncedSync();
 }
 
 export interface UpdateSessionData {
@@ -108,6 +112,7 @@ export async function updateSession(sessionId: string, data: UpdateSessionData):
 		updatedAt: now,
 		synced: false
 	});
+	debouncedSync();
 }
 
 /**
