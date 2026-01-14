@@ -1,7 +1,12 @@
 <script lang="ts">
   import { viewingDate, getTodayString } from '$lib/stores/viewingDate';
+  import { auth } from '$lib/stores/auth';
 
-  let { title = 'FinishStrong', isOnline = true } = $props();
+  let { title = 'FinishStrong', isOnline = true, isAuthenticated = false } = $props();
+
+  async function handleLogout() {
+    await auth.signOut();
+  }
 
   let showDatePicker = $state(false);
   let datePickerValue = $state('');
@@ -72,6 +77,11 @@
     <span class="status" class:offline={!isOnline} title={isOnline ? 'Online' : 'Offline'}>
       {isOnline ? '🟢' : '🔴'}
     </span>
+    {#if isAuthenticated}
+      <button class="logout-btn" onclick={handleLogout} aria-label="Log out">
+        ↪
+      </button>
+    {/if}
   </div>
 </header>
 
@@ -195,6 +205,25 @@
 
   .status.offline {
     animation: pulse 2s infinite;
+  }
+
+  .logout-btn {
+    background: var(--bg-medium);
+    border: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+  }
+
+  .logout-btn:hover {
+    background-color: var(--bg-darkest);
   }
 
   @keyframes pulse {
