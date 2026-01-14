@@ -4,6 +4,20 @@
   "description": "Voice-first exercise tracker PWA with LLM parsing, historical data view, prompt logging, and authentication",
   "userStories": [
     {
+      "id": "fix-ui-2",
+      "title": "Fix input position on Log page",
+      "description": "Input area should be fixed at the bottom of the screen, not floating in the middle",
+      "acceptanceCriteria": [
+        "Input area stays fixed at bottom of viewport",
+        "Content area scrolls independently above input",
+        "Works on mobile viewport (375x812)",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "Bug: input is not at bottom due to flex container height issue. Parent uses flex but child uses height:100% which doesn't work - needs flex:1 instead."
+    },
+    {
       "id": "setup-1",
       "title": "Project scaffolding",
       "description": "Create SvelteKit project with required dependencies",

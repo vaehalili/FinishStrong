@@ -170,13 +170,14 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
-		padding: 1rem;
-		gap: 1rem;
+		min-height: 0;
 	}
 
 	.content {
 		flex: 1;
 		overflow-y: auto;
+		padding: 1rem;
+		padding-bottom: 0;
 	}
 
 	.empty-state {
@@ -212,16 +213,20 @@
 	.error-message {
 		color: var(--red-destructive);
 		font-size: 0.875rem;
-		padding: 0.5rem 1rem;
+		padding: 0.75rem 1rem;
+		margin: 0 1rem;
 		background: rgba(248, 113, 113, 0.1);
 		border-radius: 0.5rem;
+		flex-shrink: 0;
 	}
 
 	.input-area {
 		display: flex;
 		gap: 0.5rem;
-		padding-top: 0.5rem;
+		padding: 1rem;
 		border-top: 1px solid var(--bg-medium);
+		background: var(--bg-darkest);
+		flex-shrink: 0;
 	}
 
 	.input-area input {
