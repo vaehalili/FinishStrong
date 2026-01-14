@@ -3,6 +3,7 @@ export interface Exercise {
   name: string; // normalized: lowercase with underscores
   displayName: string;
   type?: string; // 'strength' default for Supabase sync
+  updatedAt?: string; // ISO string for sync tracking
 }
 
 export interface Entry {

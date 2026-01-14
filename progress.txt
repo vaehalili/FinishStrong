@@ -473,3 +473,20 @@ Thread: https://ampcode.com/threads/T-019bbcb3-ca26-77e0-8442-2fbc286faf1d
   - Fire-and-forget pattern for association (dont block auth flow)
   - Auth store initialize() is the right place to associate on app load
 ---
+
+## 2026-01-14 - test-1 & test-2
+Thread: https://ampcode.com/threads/T-019bbcbc-28ac-7789-beee-f34374e7cae7
+- **test-1**: Already completed in validation-1 iteration. Verified 37 tests passing for input length, bounds checking, and LLM response schema validation.
+- **test-2**: Created mock data generator utility
+  - Created src/lib/db/mockData.ts with generateMockData() and clearMockData() functions
+  - Uses 6 workout templates: Push Day, Pull Day, Leg Day, Upper Body, Lower Body, Full Body
+  - Generates 30 days of workouts with 3-5 sessions per week
+  - Each session has 4-8 exercises with realistic weights, reps, sets
+  - Exposed on window via layout onMount: window.generateMockData() and window.clearMockData()
+- Files created: src/lib/db/mockData.ts
+- Files modified: src/lib/db/index.ts, src/routes/+layout.svelte, prd.json
+- **Learnings for future iterations:**
+  - Use workout templates to generate realistic workout patterns
+  - The shuffle() + slice() pattern is good for random subsets
+  - Expose dev utilities on window with proper TypeScript casting
+---
