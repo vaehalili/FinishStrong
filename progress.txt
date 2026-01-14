@@ -266,3 +266,19 @@ Thread: https://ampcode.com/threads/T-019bbc80-e272-728d-8df7-f763b89a2b12
   - Push order matters: sync sessions before entries (foreign key constraint)
   - Use syncInProgress guard to prevent race conditions during concurrent syncs
 ---
+
+## 2026-01-14 - edit-1
+Thread: https://ampcode.com/threads/T-019bbc86-345c-7409-aca5-496710ac509b
+- Implemented inline entry editing in SessionCard component
+- Created updateEntry function in src/lib/db/entries.ts with UpdateEntryData interface
+- Added Edit button on each entry row
+- Inline form shows Weight, Unit (dropdown), Reps, Sets fields
+- Save updates entry via updateEntry() and marks synced=false
+- Cancel returns to view mode
+- Files created: src/lib/db/entries.ts
+- Files modified: src/lib/db/index.ts, src/lib/components/SessionCard.svelte
+- **Learnings for future iterations:**
+  - Entry editing state managed with editingEntryId + edit field states in Svelte 5
+  - The updateEntry function uses Dexie's update() method which merges partial updates
+  - Always set synced=false and updatedAt on edits for proper sync behavior
+---

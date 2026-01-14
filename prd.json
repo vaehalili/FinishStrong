@@ -375,8 +375,8 @@
         "Entry updates in database and UI"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created updateEntry function in src/lib/db/entries.ts. Updated SessionCard with Edit button, inline edit form with Weight/Unit/Reps/Sets fields, and Save/Cancel buttons. Verified in browser - editing works correctly."
     },
     {
       "id": "edit-2",
