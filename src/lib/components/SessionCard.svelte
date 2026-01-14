@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Session, Entry, Exercise } from '$lib/db/types';
-	import { updateEntry, deleteEntry, updateSession, deleteSession } from '$lib/db';
+	import { updateEntry, deleteEntry, updateSession, deleteSession, endSession } from '$lib/db';
 
 	interface Props {
 		session: Session;
@@ -21,6 +21,13 @@
 	let editSessionNotes = $state('');
 
 	let confirmingDelete = $state(false);
+
+	const isActive = $derived(session.endedAt === null);
+
+	async function handleEndSession(e: Event) {
+		e.stopPropagation();
+		await endSession(session.id);
+	}
 
 	function startDeleteSession(e: Event) {
 		e.stopPropagation();
@@ -129,6 +136,9 @@
 			</div>
 			<span class="expand-icon" class:expanded={isExpanded}>▼</span>
 		</button>
+		{#if isActive}
+			<button class="btn-session-end" onclick={handleEndSession}>End Session</button>
+		{/if}
 		<button class="btn-session-edit" onclick={startSessionEdit}>Edit</button>
 		{#if confirmingDelete}
 			<button class="btn-session-delete-confirm" onclick={confirmDeleteSession}>Confirm</button>
@@ -480,6 +490,23 @@
 	.btn-session-edit:hover {
 		background: var(--orange-accent);
 		color: var(--bg-darkest);
+	}
+
+	.btn-session-end {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		background: var(--green-primary);
+		color: var(--bg-darkest);
+		border: none;
+		border-radius: 0.375rem;
+		cursor: pointer;
+		flex-shrink: 0;
+		margin-right: 0.5rem;
+	}
+
+	.btn-session-end:hover {
+		opacity: 0.9;
 	}
 
 	.btn-session-delete {
