@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  import { seedExercises } from '$lib/db/seed';
+  import { seedExercises, generateMockData, clearMockData } from '$lib/db';
   import AppHeader from '$lib/components/AppHeader.svelte';
   import TabNav from '$lib/components/TabNav.svelte';
   import { isOnline } from '$lib/stores/online';
@@ -16,6 +16,10 @@
   onMount(() => {
     auth.initialize();
     seedExercises();
+    
+    // Expose mock data generators on window for development/testing
+    (window as Window & { generateMockData?: typeof generateMockData; clearMockData?: typeof clearMockData }).generateMockData = generateMockData;
+    (window as Window & { generateMockData?: typeof generateMockData; clearMockData?: typeof clearMockData }).clearMockData = clearMockData;
   });
 
   $effect(() => {

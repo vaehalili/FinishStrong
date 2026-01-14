@@ -45,3 +45,4 @@ export {
 export type { UpdateSessionData } from './sessions';
 export { updateEntry, deleteEntry } from './entries';
 export type { UpdateEntryData } from './entries';
+export { generateMockData, clearMockData } from './mockData';
