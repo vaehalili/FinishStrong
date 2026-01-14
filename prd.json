@@ -510,8 +510,8 @@
         "Failed logs do not break the parse endpoint"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Integrated logPromptRequest into /api/parse. Logs fire-and-forget with .catch(console.error) so they never block. Logs on success, validation failure, JSON parse failure, and general errors."
     },
     {
       "id": "promptlog-3",
