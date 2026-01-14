@@ -588,3 +588,20 @@ Thread: https://ampcode.com/threads/T-019bbce4-1b41-758c-8398-373578d82837
   - SVG viewBox provides responsive scaling - set width/height in viewBox, use 100% width in CSS
   - For line charts, build path string with M (move) and L (line) commands
 ---
+
+## 2026-01-14 - dashboard-3
+Thread: https://ampcode.com/threads/T-019bbce7-1951-7452-a94c-782181778a2b
+- Created FrequencyChart component (src/lib/components/FrequencyChart.svelte)
+- SVG-based bar chart showing workouts per week for last 8 weeks
+- Bar heights proportional to workout count per week
+- Current week highlighted in orange accent color, other weeks in gray
+- X-axis labels rotated for readability, showing week start dates
+- Count labels displayed above bars when count > 0
+- Integrated into Dashboard page below stats grid, above ProgressChart
+- Files created: src/lib/components/FrequencyChart.svelte
+- Files modified: src/routes/dashboard/+page.svelte
+- **Learnings for future iterations:**
+  - getWeekStart() calculates Monday of any week using getDay() adjustment
+  - Use $derived functions for chart calculations with reactive props
+  - SVG bars need min-height handling (use Math.max for visibility of zero-count weeks)
+---
