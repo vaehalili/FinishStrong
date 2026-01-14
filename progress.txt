@@ -412,3 +412,18 @@ Thread: https://ampcode.com/threads/T-019bbcab-ef3c-762a-a869-014e28e0631f
   - No need for SELECT policies if only dashboard viewing is required
   - Column indexes ensure fast filtering and sorting in dashboard UI
 ---
+
+## 2026-01-14 - auth-1
+Thread: https://ampcode.com/threads/T-019bbcad-4e71-77d6-8df9-a7b87bfefbd8
+- Created auth store in src/lib/stores/auth.ts
+- Store manages AuthState (user, session, loading)
+- Implements initialize() to get session and set up auth state change listener
+- Implements signUp(), signIn(), signOut() methods wrapping Supabase auth
+- Derived stores: isAuthenticated, isAuthLoading for convenient access
+- Supabase client already configured with PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY
+- Files created: src/lib/stores/auth.ts
+- **Learnings for future iterations:**
+  - Supabase auth is built into the client - just use supabase.auth methods
+  - Use onAuthStateChange for reactive session updates across tabs/app restarts
+  - Wrap auth methods in store pattern for clean Svelte integration
+---
