@@ -107,10 +107,20 @@ A frontend story is NOT complete until browser verification passes.
 
 ## Stop Condition
 
-After completing a user story, check if ALL stories have `passes: true`.
+After completing a user story, you MUST verify completion status using this exact command:
 
-If ALL stories are complete and passing, reply with:
-<promise>COMPLETE</promise>
+```bash
+jq '[.userStories[] | select(.passes == false)] | length' prd.json
+```
+
+This returns the count of incomplete stories. 
+
+**CRITICAL:** Before declaring COMPLETE, you MUST:
+1. Run the jq command above
+2. If count > 0, list the incomplete story IDs and continue to the next iteration
+3. Only if count == 0, reply with: `<promise>COMPLETE</promise>`
+
+Do NOT trust your memory or assumptions about the PRD state. Always verify with jq.
 
 If there are still stories with `passes: false`, end your response normally (another iteration will pick up the next story).
 
