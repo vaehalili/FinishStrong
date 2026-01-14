@@ -170,8 +170,8 @@
         "Session card is expandable/collapsible"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created SessionCard component with collapsible entries. Log page now groups entries by session using Dexie liveQuery."
     },
     {
       "id": "offline-1",

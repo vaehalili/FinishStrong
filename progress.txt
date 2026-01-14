@@ -160,3 +160,20 @@ Thread: https://ampcode.com/threads/T-019bbb13-f4fc-710c-a063-3478dd0706eb
   - Use db.entries.where().reverse().sortBy() to get most recent entry
   - Session staleness is based on last entry time, not session startedAt
 ---
+
+## 2026-01-14 - ui-3
+Thread: https://ampcode.com/threads/T-019bbb16-4090-743a-a36d-3f88e8cecb7e
+- Created SessionCard component with collapsible entries display
+- Component shows session name, formatted date (e.g., "Tue, Jan 14")
+- Entries grouped within session cards with exercise name, weight, reps, sets
+- Expand/collapse toggle with animated arrow indicator
+- Updated Log page to fetch sessions and entries separately with liveQuery
+- Entries grouped by sessionId in a Map for efficient lookup
+- Browser verified on mobile viewport (375x812) - empty state works correctly
+- Files created: src/lib/components/SessionCard.svelte
+- Files modified: src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Use separate liveQuery subscriptions for sessions and entries when grouping
+  - Map<sessionId, entries[]> is efficient for session-based grouping
+  - Button element with onclick is better than div for accessible expand/collapse
+---
