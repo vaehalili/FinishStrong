@@ -87,3 +87,18 @@ Thread: https://ampcode.com/threads/T-019bb7bb-fea2-7713-aeab-660d5fcf859d
   - Use system parameter instead of prepending prompt to user message with Anthropic SDK
   - .env is gitignored, so placeholder values are safe for development
 ---
+
+## 2026-01-14 - ui-1
+Thread: https://ampcode.com/threads/T-019bbad6-bc63-7296-ba3b-000767080bab
+- Verified App layout and navigation (components were pre-built from previous threads)
+- AppHeader: 💪 logo, "FinishStrong" title, date display, online/offline status indicator
+- TabNav: Bottom navigation with Log, Ask, Dashboard tabs - active state highlighted in orange
+- Layout uses fixed header/footer with scrollable content area
+- Dark theme applied with --bg-darkest, --bg-dark, --bg-medium CSS variables
+- Mobile viewport (375x812) verified - layout renders correctly
+- All tab navigation working - tabs highlight when active
+- **Learnings for future iterations:**
+  - AppHeader and TabNav are reusable components in src/lib/components/
+  - The layout uses fixed positioning with safe-area-inset padding for iOS notches
+  - Tab active state uses $page.url.pathname from $app/stores
+---

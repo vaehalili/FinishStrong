@@ -100,7 +100,7 @@
         "Layout renders correctly on mobile viewport"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
