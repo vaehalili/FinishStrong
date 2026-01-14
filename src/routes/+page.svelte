@@ -4,21 +4,28 @@
 	import { LIMITS } from '$lib/validation';
 	import { onMount } from 'svelte';
 	import { liveQuery } from 'dexie';
+	import SessionCard from '$lib/components/SessionCard.svelte';
 
 	let inputValue = $state('');
 	let isLoading = $state(false);
 	let error = $state('');
-	let entries = $state<(Entry & { exercise?: Exercise })[]>([]);
-	let currentSession = $state<Session | null>(null);
+	let sessions = $state<Session[]>([]);
+	let entriesBySession = $state<Map<string, (Entry & { exercise?: Exercise })[]>>(new Map());
 
 	const today = new Date().toISOString().split('T')[0];
 
-	activeSession.subscribe((session) => {
-		currentSession = session;
-	});
-
 	onMount(() => {
-		const subscription = liveQuery(() =>
+		const sessionSubscription = liveQuery(() =>
+			db.sessions.where('date').equals(today).toArray()
+		).subscribe({
+			next: (sessionList) => {
+				sessions = sessionList.sort(
+					(a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+				);
+			}
+		});
+
+		const entrySubscription = liveQuery(() =>
 			db.entries.where('createdAt').startsWith(today).toArray()
 		).subscribe({
 			next: async (entryList) => {
@@ -28,13 +35,29 @@
 						return { ...entry, exercise };
 					})
 				);
-				entries = withExercises.sort(
-					(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-				);
+				
+				const grouped = new Map<string, (Entry & { exercise?: Exercise })[]>();
+				for (const entry of withExercises) {
+					const existing = grouped.get(entry.sessionId) || [];
+					existing.push(entry);
+					grouped.set(entry.sessionId, existing);
+				}
+				
+				for (const [sessionId, entries] of grouped) {
+					grouped.set(
+						sessionId,
+						entries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+					);
+				}
+				
+				entriesBySession = grouped;
 			}
 		});
 
-		return () => subscription.unsubscribe();
+		return () => {
+			sessionSubscription.unsubscribe();
+			entrySubscription.unsubscribe();
+		};
 	});
 
 	async function handleSubmit() {
@@ -108,35 +131,16 @@
 			handleSubmit();
 		}
 	}
-
-	function formatEntry(entry: Entry & { exercise?: Exercise }): string {
-		const parts: string[] = [];
-
-		if (entry.weight !== null) {
-			parts.push(`${entry.weight}${entry.unit || 'kg'}`);
-		}
-		if (entry.reps !== null) {
-			parts.push(`${entry.reps} reps`);
-		}
-		if (entry.sets !== null && entry.sets > 1) {
-			parts.push(`${entry.sets} sets`);
-		}
-
-		return parts.join(' × ');
-	}
 </script>
 
 <div class="log-page">
 	<div class="content">
-		{#if entries.length === 0}
+		{#if sessions.length === 0}
 			<p class="empty-state">No exercises logged yet today</p>
 		{:else}
-			<div class="entries-list">
-				{#each entries as entry (entry.id)}
-					<div class="entry-card">
-						<div class="entry-name">{entry.exercise?.displayName || 'Unknown Exercise'}</div>
-						<div class="entry-details">{formatEntry(entry)}</div>
-					</div>
+			<div class="sessions-list">
+				{#each sessions as session (session.id)}
+					<SessionCard {session} entries={entriesBySession.get(session.id) || []} />
 				{/each}
 			</div>
 		{/if}
@@ -187,27 +191,10 @@
 		margin-top: 4rem;
 	}
 
-	.entries-list {
+	.sessions-list {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	.entry-card {
-		background: var(--bg-dark);
-		border-radius: 0.5rem;
-		padding: 1rem;
-	}
-
-	.entry-name {
-		font-weight: 600;
-		font-size: 1rem;
-		margin-bottom: 0.25rem;
-	}
-
-	.entry-details {
-		color: var(--text-secondary);
-		font-size: 0.875rem;
+		gap: 1rem;
 	}
 
 	.error-message {
