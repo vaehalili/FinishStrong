@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Session, Entry, Exercise } from '$lib/db/types';
-	import { updateEntry } from '$lib/db';
+	import { updateEntry, deleteEntry } from '$lib/db';
 
 	interface Props {
 		session: Session;
@@ -14,6 +14,10 @@
 	let editUnit = $state<'kg' | 'lbs' | null>(null);
 	let editReps = $state<number | null>(null);
 	let editSets = $state<number | null>(null);
+
+	async function handleDelete(entryId: string) {
+		await deleteEntry(entryId);
+	}
 
 	function formatEntry(entry: Entry & { exercise?: Exercise }): string {
 		const parts: string[] = [];
@@ -143,7 +147,10 @@
 									<div class="entry-name">{entry.exercise?.displayName || 'Unknown Exercise'}</div>
 									<div class="entry-details">{formatEntry(entry)}</div>
 								</div>
-								<button class="btn-edit" onclick={() => startEdit(entry)}>Edit</button>
+								<div class="entry-actions">
+									<button class="btn-edit" onclick={() => startEdit(entry)}>Edit</button>
+									<button class="btn-delete" onclick={() => handleDelete(entry.id)}>✕</button>
+								</div>
 							</div>
 						{/if}
 					</div>
@@ -263,6 +270,29 @@
 	.btn-edit:hover {
 		background: var(--orange-accent);
 		color: var(--bg-darkest);
+	}
+
+	.entry-actions {
+		display: flex;
+		gap: 0.5rem;
+		flex-shrink: 0;
+	}
+
+	.btn-delete {
+		padding: 0.375rem 0.5rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		background: transparent;
+		color: var(--text-muted);
+		border: 1px solid var(--bg-medium);
+		border-radius: 0.375rem;
+		cursor: pointer;
+	}
+
+	.btn-delete:hover {
+		background: var(--red-destructive);
+		color: var(--bg-darkest);
+		border-color: var(--red-destructive);
 	}
 
 	.edit-form {

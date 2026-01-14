@@ -17,3 +17,7 @@ export async function updateEntry(id: string, data: UpdateEntryData): Promise<vo
 		synced: false
 	});
 }
+
+export async function deleteEntry(id: string): Promise<void> {
+	await db.entries.delete(id);
+}
