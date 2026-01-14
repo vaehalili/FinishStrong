@@ -428,8 +428,8 @@
         "Session moves from active to history"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added End Session button (green) visible only when session.endedAt is null. Click calls endSession(sessionId) which sets endedAt timestamp. Session reactively updates in UI via liveQuery."
     },
     {
       "id": "history-1",

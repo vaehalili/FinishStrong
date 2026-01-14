@@ -323,3 +323,18 @@ Thread: https://ampcode.com/threads/T-019bbc92-00ce-7218-8f4c-6ccef36f03bb
   - Two-step delete UI state can be managed with a boolean flag (confirmingDelete)
   - Delete button with confirm/cancel pattern: show Delete initially, swap to Confirm+Cancel on first click
 ---
+
+## 2026-01-14 - edit-5
+Thread: https://ampcode.com/threads/T-019bbc97-d5bb-76ee-8b05-fc9fa527a4db
+- Implemented manual session ending feature
+- Added "End Session" button (green styled) to SessionCard header
+- Button only visible for active sessions (where endedAt === null)
+- Uses isActive derived state: `const isActive = $derived(session.endedAt === null)`
+- handleEndSession() calls existing endSession(sessionId) from db module
+- Session reactively updates in UI via liveQuery when endedAt is set
+- Files modified: src/lib/components/SessionCard.svelte
+- **Learnings for future iterations:**
+  - Use $derived for computed boolean state in Svelte 5
+  - endSession() function was already implemented in sessions.ts - just needed to wire up UI
+  - Green button style consistent with positive actions (matches --green-primary)
+---
