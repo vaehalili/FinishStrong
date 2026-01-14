@@ -278,8 +278,8 @@
         "Sync triggers on data changes"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Integrated debouncedSync() (2-second debounce, syncInProgress guard) into data mutation points: entries.ts (updateEntry, deleteEntry), sessions.ts (createSession, endSession, updateSession), +page.svelte (after adding entries), queue/index.ts (after processing queue items)."
     },
     {
       "id": "query-1",

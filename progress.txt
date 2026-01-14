@@ -506,3 +506,18 @@ Thread: https://ampcode.com/threads/T-019bbcbf-8097-75e0-9afd-a07f82f2cf3e
   - gt() query operator works for ISO timestamp strings (lexicographic comparison)
   - syncInProgress guard prevents pull during push and vice versa
 ---
+
+## 2026-01-14 - sync-4
+Thread: https://ampcode.com/threads/T-019bbcc3-1a3c-70d2-a908-6d45ac418024
+- Integrated debouncedSync() into all data mutation points
+- entries.ts: calls debouncedSync() after updateEntry, deleteEntryFromSupabase after deleteEntry
+- sessions.ts: calls debouncedSync() after createSession, endSession, updateSession
+- +page.svelte: calls debouncedSync() after adding entries
+- queue/index.ts: calls debouncedSync() after successfully processing queue items
+- Exported deleteEntryFromSupabase from supabase/index.ts
+- Files modified: src/lib/db/entries.ts, src/lib/db/sessions.ts, src/lib/queue/index.ts, src/lib/supabase/index.ts, src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Sync should be triggered at data mutation points, not UI event handlers
+  - debouncedSync() handles multiple rapid changes efficiently with 2-second debounce
+  - Fire-and-forget pattern for delete sync (don't block local delete on remote delete)
+---
