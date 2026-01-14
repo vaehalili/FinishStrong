@@ -177,3 +177,17 @@ Thread: https://ampcode.com/threads/T-019bbb16-4090-743a-a36d-3f88e8cecb7e
   - Map<sessionId, entries[]> is efficient for session-based grouping
   - Button element with onclick is better than div for accessible expand/collapse
 ---
+
+## 2026-01-14 - offline-1
+Thread: https://ampcode.com/threads/T-019bbb59-a0ea-7224-8a40-5169c586cb1f
+- Created isOnline store in src/lib/stores/online.ts
+- Uses navigator.onLine for initial state
+- Listens to 'online' and 'offline' window events for real-time updates
+- Wired store to AppHeader via +layout.svelte
+- Header already had isOnline prop with red/green indicator and pulse animation
+- Files created: src/lib/stores/online.ts
+- Files modified: src/routes/+layout.svelte
+- **Learnings for future iterations:**
+  - Use `browser` check from $app/environment before accessing window/navigator
+  - The online store pattern with event listeners is reusable for other browser-only features
+---

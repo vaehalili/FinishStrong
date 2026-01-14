@@ -183,8 +183,8 @@
         "State updates when network changes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created isOnline store using navigator.onLine with online/offline event listeners. Store wired to AppHeader via layout."
     },
     {
       "id": "offline-2",
