@@ -1,5 +1,6 @@
 import { db, generateId, getOrCreateActiveSession, type ParseQueueItem, type Entry } from '$lib/db';
 import { activeSession } from '$lib/stores/session';
+import { getCurrentUserId } from '$lib/stores/auth';
 
 let processingQueue = false;
 
@@ -64,7 +65,8 @@ export async function processQueue(): Promise<{ processed: number; failed: numbe
 
 				const now = new Date().toISOString();
 				const today = now.split('T')[0];
-				const session = await getOrCreateActiveSession(today);
+				const userId = getCurrentUserId();
+				const session = await getOrCreateActiveSession(today, userId);
 				activeSession.set(session);
 
 				for (const parsed of result.data) {
@@ -93,7 +95,8 @@ export async function processQueue(): Promise<{ processed: number; failed: numbe
 						sets: parsed.sets ?? 1,
 						createdAt: now,
 						updatedAt: now,
-						synced: false
+						synced: false,
+						userId
 					};
 
 					await db.entries.add(entry);

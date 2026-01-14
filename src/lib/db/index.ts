@@ -16,6 +16,14 @@ export class FinishStrongDB extends Dexie {
       sessions: 'id, date, startedAt, endedAt, updatedAt, synced',
       parseQueue: 'id, status, createdAt'
     });
+
+    // Version 2: Add userId index to entries and sessions
+    this.version(2).stores({
+      exercises: 'id, name, updatedAt',
+      entries: 'id, exerciseId, sessionId, createdAt, updatedAt, synced, userId',
+      sessions: 'id, date, startedAt, endedAt, updatedAt, synced, userId',
+      parseQueue: 'id, status, createdAt'
+    });
   }
 }
 

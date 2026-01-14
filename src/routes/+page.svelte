@@ -3,6 +3,7 @@
 	import { activeSession } from '$lib/stores/session';
 	import { isOnline } from '$lib/stores/online';
 	import { viewingDate } from '$lib/stores/viewingDate';
+	import { getCurrentUserId } from '$lib/stores/auth';
 	import { addToParseQueue, processQueue, getPendingQueueItems } from '$lib/queue';
 	import { LIMITS } from '$lib/validation';
 	import { onMount } from 'svelte';
@@ -202,8 +203,9 @@
 			}
 
 			const now = new Date().toISOString();
+			const userId = getCurrentUserId();
 
-			const session = await getOrCreateActiveSession(currentViewingDate);
+			const session = await getOrCreateActiveSession(currentViewingDate, userId);
 			activeSession.set(session);
 
 			for (const parsed of result.data) {
@@ -232,7 +234,8 @@
 					sets: parsed.sets ?? 1,
 					createdAt: now,
 					updatedAt: now,
-					synced: false
+					synced: false,
+					userId
 				};
 
 				await db.entries.add(entry);

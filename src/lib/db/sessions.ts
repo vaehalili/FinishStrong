@@ -45,7 +45,7 @@ export async function getActiveSession(date: string): Promise<Session | undefine
 /**
  * Create a new session for a given date
  */
-export async function createSession(date: string): Promise<Session> {
+export async function createSession(date: string, userId?: string): Promise<Session> {
 	const now = new Date().toISOString();
 	const session: Session = {
 		id: generateId(),
@@ -55,7 +55,8 @@ export async function createSession(date: string): Promise<Session> {
 		endedAt: null,
 		createdAt: now,
 		updatedAt: now,
-		synced: false
+		synced: false,
+		userId
 	};
 
 	await db.sessions.add(session);
@@ -67,17 +68,17 @@ export async function createSession(date: string): Promise<Session> {
  * Returns the existing active session if one exists and is not stale
  * If the existing session is stale, ends it and creates a new one
  */
-export async function getOrCreateActiveSession(date: string): Promise<Session> {
+export async function getOrCreateActiveSession(date: string, userId?: string): Promise<Session> {
 	const existing = await getActiveSession(date);
 	if (existing) {
 		const stale = await isSessionStale(existing);
 		if (stale) {
 			await endSession(existing.id);
-			return createSession(date);
+			return createSession(date, userId);
 		}
 		return existing;
 	}
-	return createSession(date);
+	return createSession(date, userId);
 }
 
 /**
