@@ -203,3 +203,18 @@ Thread: https://ampcode.com/threads/T-019bbb60-bc69-7291-9f6b-84cbd0727ec4
   - Queue module was built incrementally - always check git status for uncommitted work
   - The queue system uses Dexie liveQuery for reactive pending items display
 ---
+
+## 2026-01-14 - offline-3
+Thread: https://ampcode.com/threads/T-019bbb62-7510-7328-acfb-eae2b022aee0
+- Added processQueue() function to src/lib/queue/index.ts
+- Function iterates through pending items, sends each through /api/parse
+- Successful parses create entries and mark item parsed
+- Failed parses mark item failed with error message
+- Added wasOffline tracking state to Log page
+- Subscribe to isOnline store and trigger processQueue when coming back online
+- Files modified: src/lib/queue/index.ts, src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Use a guard flag (processingQueue) to prevent duplicate processing
+  - Subscribe to stores in onMount and track previous state (wasOffline) to detect transitions
+  - Return unsubscribe function from store.subscribe for cleanup
+---
