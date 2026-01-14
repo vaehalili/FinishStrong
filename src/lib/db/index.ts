@@ -32,3 +32,5 @@ export {
 	endSession,
 	isSessionStale
 } from './sessions';
+export { updateEntry } from './entries';
+export type { UpdateEntryData } from './entries';

@@ -132,3 +132,11 @@ export function debouncedSync(): void {
 export function isSyncInProgress(): boolean {
 	return syncInProgress;
 }
+
+export async function deleteEntryFromSupabase(entryId: string): Promise<void> {
+	const { error } = await supabase.from('entries').delete().eq('id', entryId);
+	if (error) {
+		console.error('Failed to delete entry from Supabase:', error);
+		throw error;
+	}
+}

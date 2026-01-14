@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Session, Entry, Exercise } from '$lib/db/types';
+	import { updateEntry } from '$lib/db';
 
 	interface Props {
 		session: Session;
@@ -8,6 +9,11 @@
 
 	let { session, entries }: Props = $props();
 	let isExpanded = $state(true);
+	let editingEntryId = $state<string | null>(null);
+	let editWeight = $state<number | null>(null);
+	let editUnit = $state<'kg' | 'lbs' | null>(null);
+	let editReps = $state<number | null>(null);
+	let editSets = $state<number | null>(null);
 
 	function formatEntry(entry: Entry & { exercise?: Exercise }): string {
 		const parts: string[] = [];
@@ -37,6 +43,35 @@
 	function toggleExpanded() {
 		isExpanded = !isExpanded;
 	}
+
+	function startEdit(entry: Entry) {
+		editingEntryId = entry.id;
+		editWeight = entry.weight;
+		editUnit = entry.unit;
+		editReps = entry.reps;
+		editSets = entry.sets;
+	}
+
+	function cancelEdit() {
+		editingEntryId = null;
+		editWeight = null;
+		editUnit = null;
+		editReps = null;
+		editSets = null;
+	}
+
+	async function saveEdit() {
+		if (!editingEntryId) return;
+
+		await updateEntry(editingEntryId, {
+			weight: editWeight,
+			unit: editUnit,
+			reps: editReps,
+			sets: editSets
+		});
+
+		cancelEdit();
+	}
 </script>
 
 <div class="session-card">
@@ -55,8 +90,62 @@
 			{:else}
 				{#each entries as entry (entry.id)}
 					<div class="entry-card">
-						<div class="entry-name">{entry.exercise?.displayName || 'Unknown Exercise'}</div>
-						<div class="entry-details">{formatEntry(entry)}</div>
+						{#if editingEntryId === entry.id}
+							<div class="entry-name">{entry.exercise?.displayName || 'Unknown Exercise'}</div>
+							<div class="edit-form">
+								<div class="edit-row">
+									<label class="edit-field">
+										<span>Weight</span>
+										<input
+											type="number"
+											bind:value={editWeight}
+											placeholder="—"
+											min="0"
+											max="500"
+										/>
+									</label>
+									<label class="edit-field unit-field">
+										<span>Unit</span>
+										<select bind:value={editUnit}>
+											<option value="kg">kg</option>
+											<option value="lbs">lbs</option>
+										</select>
+									</label>
+									<label class="edit-field">
+										<span>Reps</span>
+										<input
+											type="number"
+											bind:value={editReps}
+											placeholder="—"
+											min="1"
+											max="100"
+										/>
+									</label>
+									<label class="edit-field">
+										<span>Sets</span>
+										<input
+											type="number"
+											bind:value={editSets}
+											placeholder="—"
+											min="1"
+											max="50"
+										/>
+									</label>
+								</div>
+								<div class="edit-actions">
+									<button class="btn-cancel" onclick={cancelEdit}>Cancel</button>
+									<button class="btn-save" onclick={saveEdit}>Save</button>
+								</div>
+							</div>
+						{:else}
+							<div class="entry-content">
+								<div class="entry-info">
+									<div class="entry-name">{entry.exercise?.displayName || 'Unknown Exercise'}</div>
+									<div class="entry-details">{formatEntry(entry)}</div>
+								</div>
+								<button class="btn-edit" onclick={() => startEdit(entry)}>Edit</button>
+							</div>
+						{/if}
 					</div>
 				{/each}
 			{/if}
@@ -136,6 +225,18 @@
 		padding: 0.75rem;
 	}
 
+	.entry-content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+	}
+
+	.entry-info {
+		flex: 1;
+		min-width: 0;
+	}
+
 	.entry-name {
 		font-weight: 600;
 		font-size: 0.9375rem;
@@ -145,5 +246,104 @@
 	.entry-details {
 		color: var(--text-secondary);
 		font-size: 0.8125rem;
+	}
+
+	.btn-edit {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		background: var(--bg-medium);
+		color: var(--text-secondary);
+		border: none;
+		border-radius: 0.375rem;
+		cursor: pointer;
+		flex-shrink: 0;
+	}
+
+	.btn-edit:hover {
+		background: var(--orange-accent);
+		color: var(--bg-darkest);
+	}
+
+	.edit-form {
+		margin-top: 0.75rem;
+	}
+
+	.edit-row {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	.edit-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		flex: 1;
+		min-width: 60px;
+	}
+
+	.edit-field.unit-field {
+		flex: 0.8;
+		min-width: 55px;
+	}
+
+	.edit-field span {
+		font-size: 0.625rem;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.edit-field input,
+	.edit-field select {
+		padding: 0.5rem;
+		font-size: 0.875rem;
+		background: var(--bg-medium);
+		color: var(--text-primary);
+		border: 1px solid transparent;
+		border-radius: 0.375rem;
+		width: 100%;
+	}
+
+	.edit-field input:focus,
+	.edit-field select:focus {
+		outline: none;
+		border-color: var(--orange-accent);
+	}
+
+	.edit-actions {
+		display: flex;
+		gap: 0.5rem;
+		justify-content: flex-end;
+		margin-top: 0.75rem;
+	}
+
+	.btn-cancel,
+	.btn-save {
+		padding: 0.5rem 1rem;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		border: none;
+		border-radius: 0.375rem;
+		cursor: pointer;
+	}
+
+	.btn-cancel {
+		background: var(--bg-medium);
+		color: var(--text-secondary);
+	}
+
+	.btn-cancel:hover {
+		background: var(--bg-dark);
+	}
+
+	.btn-save {
+		background: var(--green-primary);
+		color: var(--bg-darkest);
+	}
+
+	.btn-save:hover {
+		opacity: 0.9;
 	}
 </style>
