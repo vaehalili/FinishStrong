@@ -292,8 +292,8 @@
         "Validates query length"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created POST /api/query endpoint that accepts { query, entries }, sends question + workout history to Claude Haiku, validates query length (max 500 chars), and returns { success: true, answer: string }."
     },
     {
       "id": "query-2",

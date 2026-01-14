@@ -521,3 +521,18 @@ Thread: https://ampcode.com/threads/T-019bbcc3-1a3c-70d2-a908-6d45ac418024
   - debouncedSync() handles multiple rapid changes efficiently with 2-second debounce
   - Fire-and-forget pattern for delete sync (don't block local delete on remote delete)
 ---
+
+## 2026-01-14 - query-1
+Thread: https://ampcode.com/threads/T-019bbcd1-1bd0-7229-9b56-76c889d477ff
+- Created POST /api/query endpoint in src/routes/api/query/+server.ts
+- Accepts { query: string, entries: EntryData[] } in request body
+- Uses validateQueryLength (max 500 chars) for input validation
+- Sends question + workout history as context to Claude Haiku
+- Returns { success: true, answer: string } on success
+- System prompt guides LLM to analyze workout data and answer fitness questions
+- Files created: src/routes/api/query/+server.ts
+- **Learnings for future iterations:**
+  - Query API follows same pattern as parse API but returns text answer instead of structured JSON
+  - Workout history passed as JSON context in user message, not system prompt
+  - EntryData type exported for use by Ask page UI
+---
