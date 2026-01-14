@@ -115,7 +115,7 @@
         "Loading state shown during parse"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {

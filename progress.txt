@@ -102,3 +102,19 @@ Thread: https://ampcode.com/threads/T-019bbad6-bc63-7296-ba3b-000767080bab
   - The layout uses fixed positioning with safe-area-inset padding for iOS notches
   - Tab active state uses $page.url.pathname from $app/stores
 ---
+
+## 2026-01-14 - ui-2
+Thread: https://ampcode.com/threads/T-019bbad9-cdc9-716c-a889-7e4cc1ba28d1
+- Created Log page with text input at bottom (thumb-reachable position)
+- Submit button triggers /api/parse and creates entries from parsed exercises
+- Entries display in list with exercise name, weight, reps, sets
+- Multiple exercises in one input creates multiple entries (loops through parsed array)
+- Loading spinner shown during API call, button disabled
+- Error messages displayed in red banner when parse fails
+- Uses Dexie liveQuery for reactive entry list updates
+- Files modified: src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Use Dexie liveQuery with subscribe pattern for reactive data in Svelte 5
+  - Normalize exercise names with .toLowerCase().replace(/\s+/g, '_') before lookup
+  - Parse API returns 401 without valid ANTHROPIC_API_KEY in .env
+---
