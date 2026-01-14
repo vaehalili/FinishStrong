@@ -4,6 +4,7 @@
 	import { db } from '$lib/db';
 	import type { Session, Entry, Exercise } from '$lib/db';
 	import ProgressChart from '$lib/components/ProgressChart.svelte';
+	import FrequencyChart from '$lib/components/FrequencyChart.svelte';
 
 	let sessions = $state<Session[]>([]);
 	let entries = $state<Entry[]>([]);
@@ -85,6 +86,7 @@
 		{#if totalWorkouts === 0}
 			<p class="empty-state">No workouts logged yet. Start tracking!</p>
 		{:else}
+			<FrequencyChart {sessions} />
 			<ProgressChart {entries} {exercises} />
 		{/if}
 	</div>
