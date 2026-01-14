@@ -605,3 +605,18 @@ Thread: https://ampcode.com/threads/T-019bbce7-1951-7452-a94c-782181778a2b
   - Use $derived functions for chart calculations with reactive props
   - SVG bars need min-height handling (use Math.max for visibility of zero-count weeks)
 ---
+
+## 2026-01-14 - export-1
+Thread: https://ampcode.com/threads/T-019bbcea-b2ca-7684-ad8b-2bd1c733e52c
+- Created export utility module in src/lib/export/index.ts
+- CSV export with columns: Date, Session, Exercise, Weight, Unit, Reps, Sets
+- JSON export with full data structure (sessions, entries, exercises, exportedAt)
+- Added downloadCSV and downloadJSON convenience functions with file download
+- Added export buttons to Dashboard page below charts section
+- Files created: src/lib/export/index.ts
+- Files modified: src/routes/dashboard/+page.svelte
+- **Learnings for future iterations:**
+  - Use Blob + URL.createObjectURL for client-side file downloads
+  - CSV strings need proper escaping for quotes (double-quote replacement)
+  - Export functions are reusable - could be used for backup/restore features
+---

@@ -361,8 +361,8 @@
         "Download buttons on Dashboard"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created src/lib/export/index.ts with exportToCSV, exportToJSON, downloadCSV, downloadJSON functions. Added export buttons to Dashboard page below charts section."
     },
     {
       "id": "edit-1",
