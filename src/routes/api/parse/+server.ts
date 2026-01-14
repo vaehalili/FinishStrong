@@ -3,6 +3,7 @@ import type { RequestHandler } from './$types';
 import Anthropic from '@anthropic-ai/sdk';
 import { ANTHROPIC_API_KEY } from '$env/static/private';
 import { validateInputLength, validateLLMResponse, type ParsedExercise } from '$lib/validation';
+import { logPromptRequest } from '$lib/supabase/promptLog';
 
 const PARSE_PROMPT = `You are an exercise log parser. Extract exercise information from the user's natural language input.
 
@@ -32,18 +33,32 @@ const anthropic = new Anthropic({
 	apiKey: ANTHROPIC_API_KEY
 });
 
+const MODEL = 'claude-haiku-4-5-20251001';
+
 export const POST: RequestHandler = async ({ request }) => {
+	const startTime = Date.now();
+	let rawInput = '';
+
 	try {
 		const body = await request.json();
 		const { input } = body;
+		rawInput = input || '';
 
 		const inputValidation = validateInputLength(input);
 		if (!inputValidation.valid) {
+			logPromptRequest({
+				raw_input: rawInput,
+				parsed_output: null,
+				success: false,
+				latency_ms: Date.now() - startTime,
+				model: MODEL
+			}).catch(console.error);
+
 			return json({ success: false, error: inputValidation.error }, { status: 400 });
 		}
 
 		const message = await anthropic.messages.create({
-			model: 'claude-haiku-4-5-20251001',
+			model: MODEL,
 			max_tokens: 1024,
 			messages: [
 				{
@@ -64,6 +79,14 @@ export const POST: RequestHandler = async ({ request }) => {
 		try {
 			parsed = JSON.parse(responseText);
 		} catch {
+			logPromptRequest({
+				raw_input: rawInput,
+				parsed_output: null,
+				success: false,
+				latency_ms: Date.now() - startTime,
+				model: MODEL
+			}).catch(console.error);
+
 			return json(
 				{ success: false, error: 'Failed to parse LLM response as JSON' },
 				{ status: 500 }
@@ -72,15 +95,40 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const validation = validateLLMResponse(parsed);
 		if (!validation.valid) {
+			logPromptRequest({
+				raw_input: rawInput,
+				parsed_output: parsed as object,
+				success: false,
+				latency_ms: Date.now() - startTime,
+				model: MODEL
+			}).catch(console.error);
+
 			return json({ success: false, error: validation.error }, { status: 500 });
 		}
 
 		const exercises: ParsedExercise[] = validation.data!.exercises;
 
+		logPromptRequest({
+			raw_input: rawInput,
+			parsed_output: { exercises },
+			success: true,
+			latency_ms: Date.now() - startTime,
+			model: MODEL
+		}).catch(console.error);
+
 		return json({ success: true, data: exercises });
 	} catch (error) {
 		console.error('Parse API error:', error);
-		const message = error instanceof Error ? error.message : 'Unknown error';
-		return json({ success: false, error: message }, { status: 500 });
+		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+		logPromptRequest({
+			raw_input: rawInput,
+			parsed_output: null,
+			success: false,
+			latency_ms: Date.now() - startTime,
+			model: MODEL
+		}).catch(console.error);
+
+		return json({ success: false, error: errorMessage }, { status: 500 });
 	}
 };
