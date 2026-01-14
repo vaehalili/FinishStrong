@@ -29,5 +29,6 @@ export {
 	getActiveSession,
 	createSession,
 	getOrCreateActiveSession,
-	endSession
+	endSession,
+	isSessionStale
 } from './sessions';
