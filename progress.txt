@@ -457,3 +457,19 @@ Thread: https://ampcode.com/threads/T-019bbcb1-1495-70eb-950a-6acb61091493
   - onAuthStateChange listener handles cross-tab logout and token refresh
   - Use publicRoutes array pattern for defining routes that don't require auth
 ---
+
+## 2026-01-14 - auth-4
+Thread: https://ampcode.com/threads/T-019bbcb3-ca26-77e0-8442-2fbc286faf1d
+- Added userId field to Dexie schema v2 with indexes on entries and sessions tables
+- Modified createSession and getOrCreateActiveSession to accept optional userId parameter
+- Added getCurrentUserId helper function to auth store
+- Updated Log page entry creation to include userId from current auth state
+- Updated queue processQueue to include userId when creating entries/sessions
+- Created associateLocalDataWithUser function to claim orphaned local records on first login
+- Function called on SIGNED_IN auth event and initial session load
+- Files modified: src/lib/db/index.ts, src/lib/db/sessions.ts, src/lib/queue/index.ts, src/lib/stores/auth.ts, src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Use Dexie filter() for complex queries that cant use indexed where() clauses
+  - Fire-and-forget pattern for association (dont block auth flow)
+  - Auth store initialize() is the right place to associate on app load
+---

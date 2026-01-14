@@ -580,8 +580,8 @@
         "Existing local data associated with user on first login"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added userId to Dexie schema v2. createSession and getOrCreateActiveSession now accept userId. getCurrentUserId helper added to auth store. Log page and queue module set userId on entry/session creation. associateLocalDataWithUser function claims orphaned local records on login."
     },
     {
       "id": "auth-5",
