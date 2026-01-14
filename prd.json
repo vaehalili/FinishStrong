@@ -14,8 +14,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": "Bug: input is not at bottom due to flex container height issue. Parent uses flex but child uses height:100% which doesn't work - needs flex:1 instead."
+      "passes": true,
+      "notes": "Fixed by adding min-height:0 to .log-page, moving padding to .content, and making .input-area flex-shrink:0 with background color."
     },
     {
       "id": "setup-1",

@@ -6,6 +6,7 @@ Started: (new session)
 - Use `npm run check` to typecheck the project
 - Dark theme CSS variables are in `src/app.css` (--bg-darkest, --bg-dark, --bg-medium, --orange-accent, --green-primary, --red-destructive)
 - SvelteKit 5 uses `$props()` for component props in `<script lang="ts">` blocks
+- Flex layout with fixed footer pattern: container needs `min-height:0`, content needs `flex:1; overflow-y:auto`, footer needs `flex-shrink:0`
 
 ---
 
@@ -131,4 +132,18 @@ Thread: https://ampcode.com/threads/T-019bbae2-ddb7-707e-9309-5345b423c964
   - Session management code was built incrementally across multiple stories
   - The 401 API error during browser testing is expected without real ANTHROPIC_API_KEY
   - Code verification via typecheck is sufficient when external API dependencies are missing
+---
+
+## 2026-01-14 - fix-ui-2
+Thread: https://ampcode.com/threads/T-019bbb0e-c790-758f-ab49-8b32fedfbd08
+- Fixed input position on Log page - input now stays at bottom of viewport
+- Modified .log-page: added min-height:0 to allow proper flex behavior, removed padding
+- Modified .content: added flex:1, overflow-y:auto with padding
+- Modified .input-area: added flex-shrink:0 and background color to keep fixed at bottom
+- Verified in browser using dev-browser skill on mobile viewport (375x812)
+- Files modified: src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - For flex columns with scrollable content + fixed footer: use min-height:0 on the container
+  - Content area needs flex:1 and overflow-y:auto to scroll independently
+  - Footer needs flex-shrink:0 to prevent collapsing
 ---
