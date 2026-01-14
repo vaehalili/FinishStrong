@@ -2,10 +2,12 @@
 	import { onMount } from 'svelte';
 	import { liveQuery } from 'dexie';
 	import { db } from '$lib/db';
-	import type { Session, Entry } from '$lib/db';
+	import type { Session, Entry, Exercise } from '$lib/db';
+	import ProgressChart from '$lib/components/ProgressChart.svelte';
 
 	let sessions = $state<Session[]>([]);
 	let entries = $state<Entry[]>([]);
+	let exercises = $state<Exercise[]>([]);
 
 	function getStartOfWeek(): Date {
 		const now = new Date();
@@ -39,9 +41,17 @@
 			error: (err) => console.error('Entries query error:', err)
 		});
 
+		const exercisesSubscription = liveQuery(() => db.exercises.toArray()).subscribe({
+			next: (result) => {
+				exercises = result;
+			},
+			error: (err) => console.error('Exercises query error:', err)
+		});
+
 		return () => {
 			sessionsSubscription.unsubscribe();
 			entriesSubscription.unsubscribe();
+			exercisesSubscription.unsubscribe();
 		};
 	});
 </script>
@@ -74,6 +84,8 @@
 
 		{#if totalWorkouts === 0}
 			<p class="empty-state">No workouts logged yet. Start tracking!</p>
+		{:else}
+			<ProgressChart {entries} {exercises} />
 		{/if}
 	</div>
 </div>
