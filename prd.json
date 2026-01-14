@@ -321,8 +321,8 @@
         "This week's workouts count"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created dashboard page with 4 stat cards: Total Workouts (sessions count), Total Exercises (entries count), Unique Exercises (distinct exerciseIds), This Week (sessions from Monday onward). Uses Dexie liveQuery for reactive updates. 2x2 grid layout with orange highlight on This Week card."
     },
     {
       "id": "dashboard-2",

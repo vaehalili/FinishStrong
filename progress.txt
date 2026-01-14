@@ -553,3 +553,20 @@ Thread: https://ampcode.com/threads/T-019bbcd3-e144-772c-865a-c1f8b83ae723
   - Suggested questions improve UX by showing what queries are possible
   - Offline state needs to disable both input and buttons to prevent user confusion
 ---
+
+## 2026-01-14 - dashboard-1
+Thread: https://ampcode.com/threads/T-019bbcd7-36a1-718c-886f-ecdf58a4f06b
+- Implemented Dashboard stats page with 4 stat cards
+- Total Workouts: sessions.length (count of all sessions)
+- Total Exercises: entries.length (count of all logged entries)
+- Unique Exercises: Set of distinct exerciseIds from entries
+- This Week: sessions with date >= Monday of current week
+- Uses Dexie liveQuery for reactive updates when data changes
+- 2x2 grid layout with orange-highlighted "This Week" card
+- Empty state message shown when no workouts logged
+- Files modified: src/routes/dashboard/+page.svelte
+- **Learnings for future iterations:**
+  - getStartOfWeek() calculates Monday of current week for filtering
+  - Use $derived for computed values from reactive state
+  - Orange highlight card uses inverted colors (dark text on orange background)
+---
