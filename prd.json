@@ -225,8 +225,8 @@
         "Works with continuous mode enabled"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added Web Speech API integration with mic button. Continuous mode enabled, interim results shown in input field, auto-submit on stop. TypeScript types added to app.d.ts for SpeechRecognition API."
     },
     {
       "id": "sync-1",

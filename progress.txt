@@ -218,3 +218,22 @@ Thread: https://ampcode.com/threads/T-019bbb62-7510-7328-acfb-eae2b022aee0
   - Subscribe to stores in onMount and track previous state (wasOffline) to detect transitions
   - Return unsubscribe function from store.subscribe for cleanup
 ---
+
+## 2026-01-14 - voice-1
+Thread: https://ampcode.com/threads/T-019bbb65-1e6c-72bc-be06-10afe7daa626
+- Added voice input using Web Speech API to Log page
+- Mic button positioned between text input and submit button in input area
+- Tap to start recording, tap again to stop (toggleVoice function)
+- Transcript appears in input field via SpeechRecognition.onresult
+- Auto-submit on stop via SpeechRecognition.onend callback
+- Continuous mode enabled with interimResults for better multi-exercise capture
+- TypeScript types added to app.d.ts for SpeechRecognition API (window.SpeechRecognition, webkitSpeechRecognition)
+- Pulsing orange animation on mic button when recording
+- speechSupported state used to conditionally render mic button only when Web Speech API is available
+- Files modified: src/app.d.ts, src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Web Speech API requires explicit TypeScript types in app.d.ts since it's not in standard lib
+  - Use window.SpeechRecognition || window.webkitSpeechRecognition for cross-browser support
+  - browser check from $app/environment needed before accessing window APIs
+  - Cleanup recognition.abort() in onMount return to prevent memory leaks
+---
