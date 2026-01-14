@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Session, Entry, Exercise } from '$lib/db/types';
-	import { updateEntry, deleteEntry, updateSession } from '$lib/db';
+	import { updateEntry, deleteEntry, updateSession, deleteSession } from '$lib/db';
 
 	interface Props {
 		session: Session;
@@ -19,6 +19,22 @@
 	let editSessionName = $state('');
 	let editSessionDate = $state('');
 	let editSessionNotes = $state('');
+
+	let confirmingDelete = $state(false);
+
+	function startDeleteSession(e: Event) {
+		e.stopPropagation();
+		confirmingDelete = true;
+	}
+
+	function cancelDeleteSession() {
+		confirmingDelete = false;
+	}
+
+	async function confirmDeleteSession() {
+		await deleteSession(session.id);
+		confirmingDelete = false;
+	}
 
 	async function handleDelete(entryId: string) {
 		await deleteEntry(entryId);
@@ -114,6 +130,12 @@
 			<span class="expand-icon" class:expanded={isExpanded}>▼</span>
 		</button>
 		<button class="btn-session-edit" onclick={startSessionEdit}>Edit</button>
+		{#if confirmingDelete}
+			<button class="btn-session-delete-confirm" onclick={confirmDeleteSession}>Confirm</button>
+			<button class="btn-session-delete-cancel" onclick={cancelDeleteSession}>Cancel</button>
+		{:else}
+			<button class="btn-session-delete" onclick={startDeleteSession}>Delete</button>
+		{/if}
 	</div>
 
 	{#if isExpanded}
@@ -458,6 +480,58 @@
 	.btn-session-edit:hover {
 		background: var(--orange-accent);
 		color: var(--bg-darkest);
+	}
+
+	.btn-session-delete {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		background: transparent;
+		color: var(--text-muted);
+		border: 1px solid var(--bg-medium);
+		border-radius: 0.375rem;
+		cursor: pointer;
+		flex-shrink: 0;
+		margin-right: 0.5rem;
+	}
+
+	.btn-session-delete:hover {
+		background: var(--red-destructive);
+		color: var(--bg-darkest);
+		border-color: var(--red-destructive);
+	}
+
+	.btn-session-delete-confirm {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		background: var(--red-destructive);
+		color: var(--bg-darkest);
+		border: none;
+		border-radius: 0.375rem;
+		cursor: pointer;
+		flex-shrink: 0;
+	}
+
+	.btn-session-delete-confirm:hover {
+		opacity: 0.9;
+	}
+
+	.btn-session-delete-cancel {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		background: var(--bg-medium);
+		color: var(--text-secondary);
+		border: none;
+		border-radius: 0.375rem;
+		cursor: pointer;
+		flex-shrink: 0;
+		margin-right: 0.5rem;
+	}
+
+	.btn-session-delete-cancel:hover {
+		background: var(--bg-dark);
 	}
 
 	.modal-overlay {

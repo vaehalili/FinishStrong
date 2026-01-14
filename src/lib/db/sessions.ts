@@ -108,3 +108,11 @@ export async function updateSession(sessionId: string, data: UpdateSessionData):
 		synced: false
 	});
 }
+
+/**
+ * Delete a session and all its entries
+ */
+export async function deleteSession(sessionId: string): Promise<void> {
+	await db.entries.where('sessionId').equals(sessionId).delete();
+	await db.sessions.delete(sessionId);
+}
