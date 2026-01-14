@@ -196,8 +196,8 @@
         "Pending indicator shown for queued entries"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Queue module created with addToParseQueue, getPendingQueueItems, markQueueItemParsed, markQueueItemFailed. Log page checks isOnline store and queues input when offline. Pending items displayed with orange pulsing indicator."
     },
     {
       "id": "offline-3",

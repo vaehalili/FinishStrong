@@ -191,3 +191,15 @@ Thread: https://ampcode.com/threads/T-019bbb59-a0ea-7224-8a40-5169c586cb1f
   - Use `browser` check from $app/environment before accessing window/navigator
   - The online store pattern with event listeners is reusable for other browser-only features
 ---
+
+## 2026-01-14 - offline-2
+Thread: https://ampcode.com/threads/T-019bbb60-bc69-7291-9f6b-84cbd0727ec4
+- Verified queue module exists at src/lib/queue/index.ts with addToParseQueue, getPendingQueueItems, markQueueItemParsed, markQueueItemFailed
+- Log page checks isOnline store and calls addToParseQueue when offline (lines 85-94)
+- Pending queue items displayed with orange pulsing indicator in pending-section (lines 166-176)
+- All acceptance criteria already met from previous iteration work
+- Files committed: src/lib/queue/index.ts, src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Queue module was built incrementally - always check git status for uncommitted work
+  - The queue system uses Dexie liveQuery for reactive pending items display
+---
