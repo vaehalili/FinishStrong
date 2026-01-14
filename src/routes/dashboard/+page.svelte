@@ -5,6 +5,7 @@
 	import type { Session, Entry, Exercise } from '$lib/db';
 	import ProgressChart from '$lib/components/ProgressChart.svelte';
 	import FrequencyChart from '$lib/components/FrequencyChart.svelte';
+	import { downloadCSV, downloadJSON } from '$lib/export';
 
 	let sessions = $state<Session[]>([]);
 	let entries = $state<Entry[]>([]);
@@ -88,6 +89,18 @@
 		{:else}
 			<FrequencyChart {sessions} />
 			<ProgressChart {entries} {exercises} />
+
+			<div class="export-section">
+				<h3 class="section-title">Export Data</h3>
+				<div class="export-buttons">
+					<button class="export-btn" onclick={() => downloadCSV(entries, sessions, exercises)}>
+						📊 Export CSV
+					</button>
+					<button class="export-btn" onclick={() => downloadJSON(entries, sessions, exercises)}>
+						📁 Export JSON
+					</button>
+				</div>
+			</div>
 		{/if}
 	</div>
 </div>
@@ -158,5 +171,36 @@
 		font-size: 1rem;
 		text-align: center;
 		margin-top: 2rem;
+	}
+
+	.export-section {
+		margin-top: 1.5rem;
+	}
+
+	.export-buttons {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.export-btn {
+		flex: 1;
+		padding: 0.875rem 1rem;
+		background-color: var(--bg-dark);
+		border: 1px solid var(--bg-medium);
+		border-radius: 8px;
+		color: var(--text-primary);
+		font-size: 0.875rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: background-color 0.2s;
+	}
+
+	.export-btn:hover {
+		background-color: var(--bg-medium);
+	}
+
+	.export-btn:active {
+		background-color: var(--orange-accent);
+		color: var(--bg-darkest);
 	}
 </style>
