@@ -307,3 +307,19 @@ Thread: https://ampcode.com/threads/T-019bbc8f-1e86-728c-ad4d-0950d9ea09d4
   - Use svelte-ignore comments for a11y warnings on modal overlays (click to close is valid UX)
   - Move role="dialog" and aria-modal to the inner modal-content div, use role="presentation" for overlay
 ---
+
+## 2026-01-14 - edit-4
+Thread: https://ampcode.com/threads/T-019bbc92-00ce-7218-8f4c-6ccef36f03bb
+- Implemented session deletion with two-step confirmation
+- Added deleteSession function in src/lib/db/sessions.ts that deletes all entries by sessionId first, then deletes the session
+- Added Delete button to session header row in SessionCard.svelte
+- Two-step confirmation: click Delete shows Confirm/Cancel buttons, Confirm executes deletion
+- Session and entries removed from database, UI updates reactively via liveQuery
+- Exported deleteSession from src/lib/db/index.ts
+- Browser verified on mobile viewport (375x812)
+- Files modified: src/lib/db/sessions.ts, src/lib/db/index.ts, src/lib/components/SessionCard.svelte
+- **Learnings for future iterations:**
+  - Use Dexie's where().equals().delete() to delete multiple records matching a condition
+  - Two-step delete UI state can be managed with a boolean flag (confirmingDelete)
+  - Delete button with confirm/cancel pattern: show Delete initially, swap to Confirm+Cancel on first click
+---

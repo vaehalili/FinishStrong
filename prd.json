@@ -415,8 +415,8 @@
         "Deletion synced to Supabase"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added deleteSession function that deletes entries by sessionId first, then deletes the session. Two-step confirmation: Delete button shows Confirm/Cancel on click, Confirm executes the delete."
     },
     {
       "id": "edit-5",
