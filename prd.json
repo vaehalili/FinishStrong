@@ -552,8 +552,8 @@
         "Redirect to Log page after successful auth"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created /login page with mode toggle for login/signup. Email/password fields with validation. Error message display in red banner. Loading spinner on submit button. $effect redirect to / when authenticated."
     },
     {
       "id": "auth-3",

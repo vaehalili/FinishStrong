@@ -427,3 +427,19 @@ Thread: https://ampcode.com/threads/T-019bbcad-4e71-77d6-8df9-a7b87bfefbd8
   - Use onAuthStateChange for reactive session updates across tabs/app restarts
   - Wrap auth methods in store pattern for clean Svelte integration
 ---
+
+## 2026-01-14 - auth-2
+Thread: https://ampcode.com/threads/T-019bbcaf-2b9c-763b-a824-be528f853669
+- Created /login route with login/signup toggle UI
+- Email and password form fields with proper validation (required, minlength)
+- signIn/signUp handled via auth store methods
+- Error messages displayed in styled red banner
+- Loading spinner on submit button, form disabled during auth
+- $effect redirect to / (Log page) when $isAuthenticated becomes true
+- Used $state() for Svelte 5 reactivity
+- Files created: src/routes/login/+page.svelte
+- **Learnings for future iterations:**
+  - Svelte 5 requires $state() for reactive variables that get updated
+  - Use $effect() for reactive redirects based on store values
+  - Login pages should check authentication and redirect early
+---
