@@ -388,8 +388,8 @@
         "Deletion synced to Supabase"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added deleteEntry function to entries.ts. SessionCard now has X button next to Edit button. Dexie delete removes from IndexedDB and liveQuery reactively updates UI."
     },
     {
       "id": "edit-3",

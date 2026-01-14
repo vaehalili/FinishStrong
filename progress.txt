@@ -282,3 +282,15 @@ Thread: https://ampcode.com/threads/T-019bbc86-345c-7409-aca5-496710ac509b
   - The updateEntry function uses Dexie's update() method which merges partial updates
   - Always set synced=false and updatedAt on edits for proper sync behavior
 ---
+
+## 2026-01-14 - edit-2
+Thread: https://ampcode.com/threads/T-019bbc8c-bdbd-7038-a19c-14ff47f0a654
+- Added deleteEntry function to src/lib/db/entries.ts using Dexie's delete() method
+- Added X (delete) button next to Edit button in SessionCard.svelte
+- Styled btn-delete with hover state using --red-destructive color
+- Entry is removed from database and UI updates reactively via liveQuery
+- Files modified: src/lib/db/entries.ts, src/lib/db/index.ts, src/lib/components/SessionCard.svelte
+- **Learnings for future iterations:**
+  - Dexie's delete() method only requires the ID - simple and fast
+  - liveQuery subscriptions in the parent component auto-update when entries are deleted
+---
