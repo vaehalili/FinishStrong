@@ -383,3 +383,17 @@ Thread: https://ampcode.com/threads/T-019bbca7-8644-71d8-b627-d1822953af9e
   - Use JSONB type for JSON columns in Postgres (better indexing than JSON)
   - RLS insert policy uses WITH CHECK (true) to allow all inserts
 ---
+
+## 2026-01-14 - promptlog-2
+Thread: https://ampcode.com/threads/T-019bbca9-dc81-70d2-8c90-eb7c32fcb8a0
+- Integrated logPromptRequest into /api/parse endpoint
+- Added startTime tracking and rawInput capture at start of request
+- Logs fire-and-forget using `.catch(console.error)` so they never block the response
+- Logs on all exit paths: success, validation failure, JSON parse failure, and general errors
+- Added MODEL constant for consistent model reference
+- Files modified: src/routes/api/parse/+server.ts
+- **Learnings for future iterations:**
+  - Use fire-and-forget pattern (no await) for non-critical logging
+  - Track startTime at request start, compute latency at each exit point
+  - Capture input early in rawInput variable for logging in catch blocks
+---
