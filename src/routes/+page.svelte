@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { db, generateId, getOrCreateActiveSession, type Entry, type Exercise, type Session } from '$lib/db';
+	import { db, generateId, getOrCreateActiveSession, type Entry, type Exercise, type Session, type ParseQueueItem } from '$lib/db';
 	import { activeSession } from '$lib/stores/session';
+	import { isOnline } from '$lib/stores/online';
+	import { addToParseQueue } from '$lib/queue';
 	import { LIMITS } from '$lib/validation';
 	import { onMount } from 'svelte';
 	import { liveQuery } from 'dexie';
+	import { get } from 'svelte/store';
 	import SessionCard from '$lib/components/SessionCard.svelte';
 
 	let inputValue = $state('');
@@ -11,6 +14,7 @@
 	let error = $state('');
 	let sessions = $state<Session[]>([]);
 	let entriesBySession = $state<Map<string, (Entry & { exercise?: Exercise })[]>>(new Map());
+	let pendingQueueItems = $state<ParseQueueItem[]>([]);
 
 	const today = new Date().toISOString().split('T')[0];
 
@@ -54,23 +58,47 @@
 			}
 		});
 
+		const queueSubscription = liveQuery(() =>
+			db.parseQueue.where('status').equals('pending').toArray()
+		).subscribe({
+			next: (items) => {
+				pendingQueueItems = items.sort(
+					(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+				);
+			}
+		});
+
 		return () => {
 			sessionSubscription.unsubscribe();
 			entrySubscription.unsubscribe();
+			queueSubscription.unsubscribe();
 		};
 	});
 
 	async function handleSubmit() {
 		if (!inputValue.trim() || isLoading) return;
 
+		const trimmedInput = inputValue.trim();
 		isLoading = true;
 		error = '';
+
+		if (!get(isOnline)) {
+			try {
+				await addToParseQueue(trimmedInput);
+				inputValue = '';
+			} catch (err) {
+				error = err instanceof Error ? err.message : 'Failed to queue input';
+			} finally {
+				isLoading = false;
+			}
+			return;
+		}
 
 		try {
 			const response = await fetch('/api/parse', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ input: inputValue.trim() })
+				body: JSON.stringify({ input: trimmedInput })
 			});
 
 			const result = await response.json();
@@ -135,9 +163,21 @@
 
 <div class="log-page">
 	<div class="content">
-		{#if sessions.length === 0}
+		{#if pendingQueueItems.length > 0}
+			<div class="pending-section">
+				<h3 class="pending-header">Pending (offline)</h3>
+				{#each pendingQueueItems as item (item.id)}
+					<div class="pending-item">
+						<span class="pending-indicator"></span>
+						<span class="pending-text">{item.rawInput}</span>
+					</div>
+				{/each}
+			</div>
+		{/if}
+
+		{#if sessions.length === 0 && pendingQueueItems.length === 0}
 			<p class="empty-state">No exercises logged yet today</p>
-		{:else}
+		{:else if sessions.length > 0}
 			<div class="sessions-list">
 				{#each sessions as session (session.id)}
 					<SessionCard {session} entries={entriesBySession.get(session.id) || []} />
@@ -195,6 +235,54 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+	}
+
+	.pending-section {
+		margin-bottom: 1rem;
+	}
+
+	.pending-header {
+		color: var(--orange-accent);
+		font-size: 0.875rem;
+		font-weight: 600;
+		margin: 0 0 0.5rem 0;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.pending-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+		background: var(--bg-dark);
+		border: 1px solid var(--bg-medium);
+		border-radius: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.pending-indicator {
+		width: 0.5rem;
+		height: 0.5rem;
+		background: var(--orange-accent);
+		border-radius: 50%;
+		flex-shrink: 0;
+		animation: pulse-pending 1.5s ease-in-out infinite;
+	}
+
+	.pending-text {
+		color: var(--text-muted);
+		font-size: 0.875rem;
+		font-style: italic;
+	}
+
+	@keyframes pulse-pending {
+		0%, 100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.4;
+		}
 	}
 
 	.error-message {
