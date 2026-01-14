@@ -265,8 +265,8 @@
         "Local records updated with remote data"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented pullFromSupabase() with lastPull timestamp tracking in localStorage. Uses gt(updated_at) query for incremental pulls. Last-write-wins via updatedAt comparison before put()."
     },
     {
       "id": "sync-4",

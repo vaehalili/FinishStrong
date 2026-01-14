@@ -490,3 +490,19 @@ Thread: https://ampcode.com/threads/T-019bbcbc-28ac-7789-beee-f34374e7cae7
   - The shuffle() + slice() pattern is good for random subsets
   - Expose dev utilities on window with proper TypeScript casting
 ---
+
+## 2026-01-14 - sync-3
+Thread: https://ampcode.com/threads/T-019bbcbf-8097-75e0-9afd-a07f82f2cf3e
+- Implemented pullFromSupabase() function in src/lib/supabase/sync.ts
+- Added lastPull timestamp tracking in localStorage (LAST_PULL_KEY)
+- Uses gt('updated_at', lastPull) query for incremental pulls
+- Last-write-wins conflict resolution by comparing remote.updated_at > local.updatedAt
+- Conversion functions: supabaseToSession, supabaseToEntry, supabaseToExercise for snake_case -> camelCase
+- Added updatedAt field to Exercise type for sync tracking
+- Exported pullFromSupabase from src/lib/supabase/index.ts
+- Files modified: src/lib/supabase/sync.ts, src/lib/supabase/index.ts, src/lib/db/types.ts
+- **Learnings for future iterations:**
+  - Use localStorage for lastPull timestamp tracking (simple and persistent)
+  - gt() query operator works for ISO timestamp strings (lexicographic comparison)
+  - syncInProgress guard prevents pull during push and vice versa
+---
