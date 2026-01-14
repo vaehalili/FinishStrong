@@ -338,3 +338,19 @@ Thread: https://ampcode.com/threads/T-019bbc97-d5bb-76ee-8b05-fc9fa527a4db
   - endSession() function was already implemented in sessions.ts - just needed to wire up UI
   - Green button style consistent with positive actions (matches --green-primary)
 ---
+
+## 2026-01-14 - history-1
+Thread: https://ampcode.com/threads/T-019bbc9a-4d47-77d8-89a3-ff5ebb332ec3
+- Created viewingDate store in src/lib/stores/viewingDate.ts
+- Store provides: goToPreviousDay(), goToNextDay(), goToToday(), goToDate(dateString), isToday()
+- Updated AppHeader with date navigation: left/right arrow buttons, clickable date display, conditional Today button
+- Date picker popup with HTML date input and overlay
+- Today button only appears when viewing a past date (uses $derived isToday check)
+- Verified in browser: navigation buttons work, date picker opens, Today returns to current date
+- Files created: src/lib/stores/viewingDate.ts
+- Files modified: src/lib/components/AppHeader.svelte
+- **Learnings for future iterations:**
+  - Use `new Date(dateString + 'T00:00:00')` to parse ISO date strings without timezone offset issues
+  - getTodayString() returns current date as YYYY-MM-DD format for comparison
+  - Date picker popup uses role="presentation" on overlay to prevent a11y issues
+---

@@ -442,8 +442,8 @@
         "Today button to quickly return to current date"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created viewingDate store with goToPreviousDay, goToNextDay, goToToday, goToDate methods. Updated AppHeader with nav buttons, date picker popup, and conditional Today button."
     },
     {
       "id": "history-2",
