@@ -248,3 +248,21 @@ Thread: https://ampcode.com/threads/T-019bbc7f-7ed3-720c-b147-30f909941486
   - Supabase client uses PUBLIC_ prefixed env vars (client-accessible)
   - Import pattern: `import { supabase } from '$lib/supabase'`
 ---
+
+## 2026-01-14 - sync-2
+Thread: https://ampcode.com/threads/T-019bbc80-e272-728d-8df7-f763b89a2b12
+- Created sync module in src/lib/supabase/sync.ts
+- pushToSupabase() syncs exercises, sessions, then entries (order matters - entries reference sessions)
+- Queries unsynced records via `where('synced').equals(0)` index query
+- Snake_case column mapping: sessionId → session_id, exerciseId → exercise_id, etc.
+- Exercises always include `type: 'strength'` per AGENTS.md requirement
+- debouncedSync() with 2000ms delay prevents excessive API calls
+- syncInProgress guard prevents duplicate concurrent syncs
+- Exported pushToSupabase, debouncedSync, isSyncInProgress from src/lib/supabase/index.ts
+- Files created: src/lib/supabase/sync.ts
+- Files modified: src/lib/supabase/index.ts
+- **Learnings for future iterations:**
+  - Dexie boolean index uses 0/1 values, not true/false for queries
+  - Push order matters: sync sessions before entries (foreign key constraint)
+  - Use syncInProgress guard to prevent race conditions during concurrent syncs
+---

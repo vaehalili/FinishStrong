@@ -246,13 +246,13 @@
       "description": "Sync unsynced records to Supabase",
       "acceptanceCriteria": [
         "Batch upsert for sessions, entries, exercises",
-        "Only unsynced records pushed",
+        "Only unsynced records pushed (using synced=0 index query)",
         "Synced flag set to true after successful push",
         "Exercises only synced if referenced by entries"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created src/lib/supabase/sync.ts with pushToSupabase(), debouncedSync(), and helper functions. Uses snake_case column mapping, queries unsynced records via synced=0 index, syncs exercises/sessions/entries in order, marks synced=true after successful push. 2000ms debounce prevents excessive API calls."
     },
     {
       "id": "sync-3",
