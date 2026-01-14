@@ -237,3 +237,14 @@ Thread: https://ampcode.com/threads/T-019bbb65-1e6c-72bc-be06-10afe7daa626
   - browser check from $app/environment needed before accessing window APIs
   - Cleanup recognition.abort() in onMount return to prevent memory leaks
 ---
+
+## 2026-01-14 - sync-1
+Thread: https://ampcode.com/threads/T-019bbc7f-7ed3-720c-b147-30f909941486
+- Created Supabase client in src/lib/supabase/client.ts
+- Uses PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY from $env/static/public
+- Exported from src/lib/supabase/index.ts for easy imports
+- Files created: src/lib/supabase/client.ts, src/lib/supabase/index.ts
+- **Learnings for future iterations:**
+  - Supabase client uses PUBLIC_ prefixed env vars (client-accessible)
+  - Import pattern: `import { supabase } from '$lib/supabase'`
+---

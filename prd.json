@@ -237,8 +237,8 @@
         "Client accessible from lib module"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created src/lib/supabase/client.ts with Supabase client using PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY from $env/static/public. Exported from src/lib/supabase/index.ts."
     },
     {
       "id": "sync-2",
