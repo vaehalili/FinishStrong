@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { liveQuery } from 'dexie';
 	import { get } from 'svelte/store';
+	import { browser } from '$app/environment';
 	import SessionCard from '$lib/components/SessionCard.svelte';
 
 	let inputValue = $state('');
@@ -18,9 +19,49 @@
 	let wasOffline = $state(false);
 	let isProcessingQueue = $state(false);
 
+	let isRecording = $state(false);
+	let recognition: SpeechRecognition | null = $state(null);
+	let speechSupported = $state(false);
+
 	const today = new Date().toISOString().split('T')[0];
 
 	onMount(() => {
+		if (browser) {
+			const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+			if (SpeechRecognition) {
+				speechSupported = true;
+				recognition = new SpeechRecognition();
+				recognition.continuous = true;
+				recognition.interimResults = true;
+				recognition.lang = 'en-US';
+
+				recognition.onresult = (event: SpeechRecognitionEvent) => {
+					let transcript = '';
+					for (let i = 0; i < event.results.length; i++) {
+						transcript += event.results[i][0].transcript;
+					}
+					inputValue = transcript;
+				};
+
+				recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+					console.error('Speech recognition error:', event.error);
+					isRecording = false;
+					if (event.error !== 'aborted') {
+						error = `Voice error: ${event.error}`;
+					}
+				};
+
+				recognition.onend = () => {
+					if (isRecording) {
+						isRecording = false;
+						if (inputValue.trim()) {
+							handleSubmit();
+						}
+					}
+				};
+			}
+		}
+
 		const sessionSubscription = liveQuery(() =>
 			db.sessions.where('date').equals(today).toArray()
 		).subscribe({
@@ -90,8 +131,24 @@
 			entrySubscription.unsubscribe();
 			queueSubscription.unsubscribe();
 			onlineSubscription();
+			if (recognition) {
+				recognition.abort();
+			}
 		};
 	});
+
+	function toggleVoice() {
+		if (!recognition) return;
+
+		if (isRecording) {
+			recognition.stop();
+		} else {
+			inputValue = '';
+			error = '';
+			isRecording = true;
+			recognition.start();
+		}
+	}
 
 	async function handleSubmit() {
 		if (!inputValue.trim() || isLoading) return;
@@ -212,12 +269,26 @@
 		<input
 			type="text"
 			bind:value={inputValue}
-			placeholder="Log an exercise... (e.g., bench press 80kg 8x3)"
+			placeholder={isRecording ? 'Listening...' : 'Log an exercise... (e.g., bench press 80kg 8x3)'}
 			maxlength={LIMITS.INPUT_MAX_LENGTH}
-			disabled={isLoading}
+			disabled={isLoading || isRecording}
 			onkeydown={handleKeydown}
 		/>
-		<button onclick={handleSubmit} disabled={isLoading || !inputValue.trim()} class="submit-btn">
+		{#if speechSupported}
+			<button
+				onclick={toggleVoice}
+				disabled={isLoading}
+				class="mic-btn"
+				class:recording={isRecording}
+				aria-label={isRecording ? 'Stop recording' : 'Start voice input'}
+			>
+				{#if isRecording}
+					<span class="mic-pulse"></span>
+				{/if}
+				🎤
+			</button>
+		{/if}
+		<button onclick={handleSubmit} disabled={isLoading || !inputValue.trim() || isRecording} class="submit-btn">
 			{#if isLoading}
 				<span class="spinner"></span>
 			{:else}
@@ -343,6 +414,56 @@
 
 	.input-area input:disabled {
 		opacity: 0.6;
+	}
+
+	.mic-btn {
+		position: relative;
+		padding: 0.875rem 1rem;
+		background: var(--bg-dark);
+		border: 1px solid var(--bg-medium);
+		border-radius: 0.5rem;
+		font-size: 1.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 3.5rem;
+		cursor: pointer;
+		transition: background-color 0.2s, border-color 0.2s;
+	}
+
+	.mic-btn:hover:not(:disabled) {
+		border-color: var(--orange-accent);
+	}
+
+	.mic-btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.mic-btn.recording {
+		background: rgba(251, 146, 60, 0.2);
+		border-color: var(--orange-accent);
+	}
+
+	.mic-pulse {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		border-radius: 0.5rem;
+		background: var(--orange-accent);
+		opacity: 0.3;
+		animation: mic-pulse-anim 1s ease-out infinite;
+	}
+
+	@keyframes mic-pulse-anim {
+		0% {
+			transform: scale(1);
+			opacity: 0.3;
+		}
+		100% {
+			transform: scale(1.3);
+			opacity: 0;
+		}
 	}
 
 	.submit-btn {
