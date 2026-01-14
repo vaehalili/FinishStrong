@@ -456,8 +456,8 @@
         "Sessions load from local database"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Updated Log page to subscribe to viewingDate store. Created loadDataForDate function that recreates liveQuery subscriptions when date changes. Empty state message updated to 'No exercises logged for this date'."
     },
     {
       "id": "history-3",
@@ -470,8 +470,8 @@
         "viewingDate store tracks current context date"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "handleSubmit now uses currentViewingDate instead of hardcoded today. getOrCreateActiveSession called with viewing date, enabling backdating forgotten workouts."
     },
     {
       "id": "history-4",
@@ -483,8 +483,8 @@
         "Session date matches the viewing date, not current time"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "getOrCreateActiveSession already supports any date parameter. Now called with currentViewingDate, creating sessions for past dates with time-based naming."
     },
     {
       "id": "promptlog-1",

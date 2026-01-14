@@ -354,3 +354,18 @@ Thread: https://ampcode.com/threads/T-019bbc9a-4d47-77d8-89a3-ff5ebb332ec3
   - getTodayString() returns current date as YYYY-MM-DD format for comparison
   - Date picker popup uses role="presentation" on overlay to prevent a11y issues
 ---
+
+## 2026-01-14 - history-2, history-3, history-4
+Thread: https://ampcode.com/threads/T-019bbc9e-a1b0-708b-87cc-b9807f7ec119
+- Implemented historical date viewing for sessions
+- Updated Log page to subscribe to viewingDate store instead of hardcoded today
+- Created loadDataForDate() function that recreates liveQuery subscriptions when viewing date changes
+- handleSubmit now uses currentViewingDate for getOrCreateActiveSession (enables backdating)
+- Updated empty state message to "No exercises logged for this date"
+- Browser verified: date navigation shows correct date, empty state displays properly
+- Files modified: src/routes/+page.svelte
+- **Learnings for future iterations:**
+  - Use store.subscribe() in onMount to react to store changes and recreate subscriptions
+  - Keep a cleanup function reference and call it before creating new subscriptions
+  - Implementing history-2 also covered history-3 and history-4 acceptance criteria
+---
