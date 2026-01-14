@@ -156,8 +156,8 @@
         "New session created after stale session ends"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented isSessionStale() with 2-hour threshold. getOrCreateActiveSession() now checks staleness and auto-ends stale sessions before creating new ones."
     },
     {
       "id": "ui-3",

@@ -147,3 +147,16 @@ Thread: https://ampcode.com/threads/T-019bbb0e-c790-758f-ab49-8b32fedfbd08
   - Content area needs flex:1 and overflow-y:auto to scroll independently
   - Footer needs flex-shrink:0 to prevent collapsing
 ---
+
+## 2026-01-14 - session-2
+Thread: https://ampcode.com/threads/T-019bbb13-f4fc-710c-a063-3478dd0706eb
+- Implemented stale session handling with 2-hour threshold
+- Added STALE_THRESHOLD_MS constant (2 * 60 * 60 * 1000)
+- Created isSessionStale() function that checks last entry time vs session startedAt
+- Modified getOrCreateActiveSession() to auto-end stale sessions and create new ones
+- Exported isSessionStale from db module
+- Files modified: src/lib/db/sessions.ts, src/lib/db/index.ts
+- **Learnings for future iterations:**
+  - Use db.entries.where().reverse().sortBy() to get most recent entry
+  - Session staleness is based on last entry time, not session startedAt
+---
