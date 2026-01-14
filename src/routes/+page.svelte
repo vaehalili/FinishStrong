@@ -2,7 +2,7 @@
 	import { db, generateId, getOrCreateActiveSession, type Entry, type Exercise, type Session, type ParseQueueItem } from '$lib/db';
 	import { activeSession } from '$lib/stores/session';
 	import { isOnline } from '$lib/stores/online';
-	import { addToParseQueue } from '$lib/queue';
+	import { addToParseQueue, processQueue, getPendingQueueItems } from '$lib/queue';
 	import { LIMITS } from '$lib/validation';
 	import { onMount } from 'svelte';
 	import { liveQuery } from 'dexie';
@@ -15,6 +15,8 @@
 	let sessions = $state<Session[]>([]);
 	let entriesBySession = $state<Map<string, (Entry & { exercise?: Exercise })[]>>(new Map());
 	let pendingQueueItems = $state<ParseQueueItem[]>([]);
+	let wasOffline = $state(false);
+	let isProcessingQueue = $state(false);
 
 	const today = new Date().toISOString().split('T')[0];
 
@@ -68,10 +70,26 @@
 			}
 		});
 
+		const onlineSubscription = isOnline.subscribe(async (online) => {
+			if (online && wasOffline) {
+				const pending = await getPendingQueueItems();
+				if (pending.length > 0 && !isProcessingQueue) {
+					isProcessingQueue = true;
+					try {
+						await processQueue();
+					} finally {
+						isProcessingQueue = false;
+					}
+				}
+			}
+			wasOffline = !online;
+		});
+
 		return () => {
 			sessionSubscription.unsubscribe();
 			entrySubscription.unsubscribe();
 			queueSubscription.unsubscribe();
+			onlineSubscription();
 		};
 	});
 
