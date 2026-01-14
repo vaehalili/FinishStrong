@@ -4,6 +4,7 @@
   import { seedExercises } from '$lib/db/seed';
   import AppHeader from '$lib/components/AppHeader.svelte';
   import TabNav from '$lib/components/TabNav.svelte';
+  import { isOnline } from '$lib/stores/online';
 
   let { children } = $props();
 
@@ -13,7 +14,7 @@
 </script>
 
 <div class="app-container">
-  <AppHeader />
+  <AppHeader isOnline={$isOnline} />
   <main class="main-content">
     {@render children()}
   </main>
