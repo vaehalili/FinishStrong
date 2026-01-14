@@ -536,3 +536,20 @@ Thread: https://ampcode.com/threads/T-019bbcd1-1bd0-7229-9b56-76c889d477ff
   - Workout history passed as JSON context in user message, not system prompt
   - EntryData type exported for use by Ask page UI
 ---
+
+## 2026-01-14 - query-2
+Thread: https://ampcode.com/threads/T-019bbcd3-e144-772c-865a-c1f8b83ae723
+- Created Ask page UI with full feature set
+- Text input for questions with LIMITS.QUERY_MAX_LENGTH (500 chars) validation
+- Voice input using Web Speech API (same pattern as Log page: continuous mode, auto-submit on stop)
+- Answer display section with styled card and label
+- 4 suggested questions as quick buttons: "What's my bench press PR?", "How many workouts this week?", "What was my heaviest deadlift?", "Show my recent exercises"
+- Offline warning banner shown when disconnected (uses isOnline store)
+- Loading state with spinner and "Thinking..." text
+- All inputs disabled when offline or loading
+- Files modified: src/routes/ask/+page.svelte
+- **Learnings for future iterations:**
+  - Same voice input pattern reusable: recognition.continuous = true, recognition.interimResults = true
+  - Suggested questions improve UX by showing what queries are possible
+  - Offline state needs to disable both input and buttons to prevent user confusion
+---

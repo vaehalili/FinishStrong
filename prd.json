@@ -307,8 +307,8 @@
         "Offline warning shown when disconnected"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Ask page with text input, voice input (Web Speech API), answer display, 4 suggested questions as quick buttons, and offline warning banner. Uses LIMITS.QUERY_MAX_LENGTH for validation."
     },
     {
       "id": "dashboard-1",
