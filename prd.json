@@ -210,8 +210,8 @@
         "Failed parses mark item failed"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added processQueue() function to queue module. Log page subscribes to isOnline store and triggers queue processing when coming back online. Each pending item is sent through parse API, entries created on success, items marked parsed/failed accordingly."
     },
     {
       "id": "voice-1",
