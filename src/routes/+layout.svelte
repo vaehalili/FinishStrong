@@ -30,6 +30,8 @@
 
   .main-content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     padding-top: calc(60px + env(safe-area-inset-top, 0px));
     padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;

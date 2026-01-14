@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { db, generateId, type Entry, type Exercise } from '$lib/db';
+	import { db, generateId, getOrCreateActiveSession, type Entry, type Exercise, type Session } from '$lib/db';
+	import { activeSession } from '$lib/stores/session';
 	import { LIMITS } from '$lib/validation';
 	import { onMount } from 'svelte';
 	import { liveQuery } from 'dexie';
@@ -8,8 +9,13 @@
 	let isLoading = $state(false);
 	let error = $state('');
 	let entries = $state<(Entry & { exercise?: Exercise })[]>([]);
+	let currentSession = $state<Session | null>(null);
 
 	const today = new Date().toISOString().split('T')[0];
+
+	activeSession.subscribe((session) => {
+		currentSession = session;
+	});
 
 	onMount(() => {
 		const subscription = liveQuery(() =>
@@ -53,6 +59,9 @@
 
 			const now = new Date().toISOString();
 
+			const session = await getOrCreateActiveSession(today);
+			activeSession.set(session);
+
 			for (const parsed of result.data) {
 				const normalizedName = parsed.exercise.toLowerCase().replace(/\s+/g, '_');
 
@@ -72,7 +81,7 @@
 				const entry: Entry = {
 					id: generateId(),
 					exerciseId: exercise.id,
-					sessionId: '',
+					sessionId: session.id,
 					weight: parsed.weight,
 					unit: parsed.unit,
 					reps: parsed.reps,
@@ -160,7 +169,7 @@
 	.log-page {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		flex: 1;
 		padding: 1rem;
 		gap: 1rem;
 	}
