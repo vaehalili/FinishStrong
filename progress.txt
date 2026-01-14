@@ -570,3 +570,21 @@ Thread: https://ampcode.com/threads/T-019bbcd7-36a1-718c-886f-ecdf58a4f06b
   - Use $derived for computed values from reactive state
   - Orange highlight card uses inverted colors (dark text on orange background)
 ---
+
+## 2026-01-14 - dashboard-2
+Thread: https://ampcode.com/threads/T-019bbce4-1b41-758c-8398-373578d82837
+- Created ProgressChart component (src/lib/components/ProgressChart.svelte)
+- SVG-based line chart showing max weight per workout date
+- Exercise selector dropdown filters to exercises with weight data
+- Chart calculates max weight per date using Map aggregation
+- Uses $derived for reactive chart data, line path, and scales
+- Orange accent color for line and data points, dark theme styling
+- Integrated into Dashboard page (conditionally rendered when workouts exist)
+- Added exercises liveQuery subscription to dashboard
+- Files created: src/lib/components/ProgressChart.svelte
+- Files modified: src/routes/dashboard/+page.svelte
+- **Learnings for future iterations:**
+  - Use $derived functions (with `()` invocation) for computed values that depend on reactive state
+  - SVG viewBox provides responsive scaling - set width/height in viewBox, use 100% width in CSS
+  - For line charts, build path string with M (move) and L (line) commands
+---
