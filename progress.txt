@@ -443,3 +443,17 @@ Thread: https://ampcode.com/threads/T-019bbcaf-2b9c-763b-a824-be528f853669
   - Use $effect() for reactive redirects based on store values
   - Login pages should check authentication and redirect early
 ---
+
+## 2026-01-14 - auth-3
+Thread: https://ampcode.com/threads/T-019bbcb1-1495-70eb-950a-6acb61091493
+- Implemented session persistence with Supabase auth
+- Added auth.initialize() call in +layout.svelte onMount to restore session on app load
+- Supabase automatically persists auth tokens in localStorage and handles auto-refresh
+- Added logout button (↪) to AppHeader, visible when authenticated
+- Protected routes: $effect in layout redirects to /login when not authenticated and not on public route
+- Files modified: src/routes/+layout.svelte, src/lib/components/AppHeader.svelte
+- **Learnings for future iterations:**
+  - Supabase handles token persistence automatically via localStorage
+  - onAuthStateChange listener handles cross-tab logout and token refresh
+  - Use publicRoutes array pattern for defining routes that don't require auth
+---

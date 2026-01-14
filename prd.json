@@ -566,8 +566,8 @@
         "Protected routes redirect to login if not authenticated"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Supabase handles token persistence in localStorage and auto-refresh. Added auth.initialize() in layout's onMount. Logout button in header. Protected routes via $effect redirect to /login when not authenticated."
     },
     {
       "id": "auth-4",
