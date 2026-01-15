@@ -1,0 +1,5 @@
+name = "finishstrong"
+compatibility_date = "2026-01-15"
+
+[site]
+bucket = ".svelte-kit/cloudflare"
