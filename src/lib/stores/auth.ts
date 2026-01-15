@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import { browser } from '$app/environment';
 import { supabase } from '$lib/supabase';
 import { db } from '$lib/db';
@@ -92,11 +92,18 @@ export const isAuthLoading = derived(auth, ($auth) => $auth.loading);
  * Get the current user's ID (or undefined if not authenticated)
  */
 export function getCurrentUserId(): string | undefined {
-	let userId: string | undefined;
-	auth.subscribe(($auth) => {
-		userId = $auth.user?.id;
-	})();
-	return userId;
+	return get(auth).user?.id;
+}
+
+/**
+ * Get the current user's ID asynchronously (fetches from Supabase if needed)
+ */
+export async function getCurrentUserIdAsync(): Promise<string | undefined> {
+	const storeUser = get(auth).user;
+	if (storeUser?.id) return storeUser.id;
+	
+	const { data: { session } } = await supabase.auth.getSession();
+	return session?.user?.id;
 }
 
 /**

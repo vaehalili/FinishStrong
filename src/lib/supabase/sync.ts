@@ -41,6 +41,7 @@ function entryToSupabase(entry: Entry) {
 		reps: entry.reps,
 		sets: entry.sets,
 		notes: entry.notes || null,
+		date: entry.createdAt.split('T')[0],
 		created_at: entry.createdAt,
 		updated_at: entry.updatedAt,
 		user_id: entry.userId || null
@@ -57,7 +58,7 @@ function exerciseToSupabase(exercise: Exercise) {
 }
 
 async function pushSessions(): Promise<string[]> {
-	const unsyncedSessions = await db.sessions.where('synced').equals(0).toArray();
+	const unsyncedSessions = await db.sessions.filter((s) => s.synced === false).toArray();
 	if (unsyncedSessions.length === 0) return [];
 
 	const payload = unsyncedSessions.map(sessionToSupabase);
@@ -74,7 +75,7 @@ async function pushSessions(): Promise<string[]> {
 }
 
 async function pushEntries(): Promise<string[]> {
-	const unsyncedEntries = await db.entries.where('synced').equals(0).toArray();
+	const unsyncedEntries = await db.entries.filter((e) => e.synced === false).toArray();
 	if (unsyncedEntries.length === 0) return [];
 
 	const payload = unsyncedEntries.map(entryToSupabase);
