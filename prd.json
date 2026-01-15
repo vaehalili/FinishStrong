@@ -593,9 +593,9 @@
         "Users can only read/write their own records",
         "Sync respects user isolation"
       ],
-      "priority": 99,
+      "priority": 8,
       "passes": false,
-      "notes": "DEFERRED - will implement later"
+      "notes": ""
     },
     {
       "id": "test-1",

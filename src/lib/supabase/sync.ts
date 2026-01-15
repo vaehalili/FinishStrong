@@ -4,6 +4,15 @@ import type { Exercise, Entry, Session } from '$lib/db/types';
 import { browser } from '$app/environment';
 
 const SYNC_DEBOUNCE_MS = 2000;
+
+/**
+ * Check if the user is currently authenticated.
+ * Sync operations require authentication for RLS to work correctly.
+ */
+async function isAuthenticated(): Promise<boolean> {
+	const { data: { session } } = await supabase.auth.getSession();
+	return session !== null;
+}
 const LAST_PULL_KEY = 'finishstrong_last_pull';
 let syncDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 let syncInProgress = false;
@@ -102,6 +111,11 @@ export async function pushToSupabase(): Promise<{
 	exercises: string[];
 }> {
 	if (syncInProgress) {
+		return { sessions: [], entries: [], exercises: [] };
+	}
+
+	// RLS requires authentication - skip sync if not authenticated
+	if (!(await isAuthenticated())) {
 		return { sessions: [], entries: [], exercises: [] };
 	}
 
@@ -307,6 +321,11 @@ export async function pullFromSupabase(): Promise<{
 	entries: number;
 }> {
 	if (syncInProgress) {
+		return { exercises: 0, sessions: 0, entries: 0 };
+	}
+
+	// RLS requires authentication - skip sync if not authenticated
+	if (!(await isAuthenticated())) {
 		return { exercises: 0, sessions: 0, entries: 0 };
 	}
 
