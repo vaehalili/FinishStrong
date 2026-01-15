@@ -620,3 +620,19 @@ Thread: https://ampcode.com/threads/T-019bbcea-b2ca-7684-ad8b-2bd1c733e52c
   - CSV strings need proper escaping for quotes (double-quote replacement)
   - Export functions are reusable - could be used for backup/restore features
 ---
+
+## 2026-01-15 - auth-5
+Thread: https://ampcode.com/threads/T-019bbf3d-ce52-714a-9f5b-cf7e407f265d
+- Verified RLS migration exists at supabase/migrations/002_enable_rls.sql
+- RLS policies for sessions: SELECT/INSERT/UPDATE/DELETE using auth.uid() = user_id
+- RLS policies for entries: SELECT/INSERT/UPDATE/DELETE using auth.uid() = user_id
+- Exercises table has public read access (shared reference data)
+- Updated sync.ts to check authentication before push/pull operations
+- Added isAuthenticated() helper function to sync module
+- Sync now skips if user is not authenticated (respects RLS requirements)
+- Files modified: src/lib/supabase/sync.ts
+- **Learnings for future iterations:**
+  - RLS policies use auth.uid() to get the current authenticated user's ID
+  - Sync operations must check authentication status before calling Supabase
+  - Exercises are shared across users, so they use public read access
+---

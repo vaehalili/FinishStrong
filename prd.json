@@ -594,8 +594,8 @@
         "Sync respects user isolation"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "RLS migration in 002_enable_rls.sql with policies for SELECT/INSERT/UPDATE/DELETE on sessions and entries tables using auth.uid() = user_id. Sync functions now check authentication before push/pull to respect RLS."
     },
     {
       "id": "test-1",
