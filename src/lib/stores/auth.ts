@@ -1,6 +1,7 @@
 import { writable, derived, get } from 'svelte/store';
 import { browser } from '$app/environment';
-import { supabase } from '$lib/supabase';
+import { supabase } from '$lib/supabase/client';
+import { pullFromSupabase } from '$lib/supabase/sync';
 import { db } from '$lib/db';
 import type { User, Session, AuthError } from '@supabase/supabase-js';
 
@@ -29,9 +30,10 @@ function createAuthStore() {
 			loading: false
 		});
 
-		// Associate local data with user on initial session load
+		// Associate local data with user on initial session load and pull from cloud
 		if (session?.user?.id) {
 			associateLocalDataWithUser(session.user.id).catch(console.error);
+			pullFromSupabase().catch(console.error);
 		}
 
 		supabase.auth.onAuthStateChange((event, session) => {
@@ -41,9 +43,10 @@ function createAuthStore() {
 				loading: false
 			});
 
-			// Associate local data when user signs in
+			// Associate local data when user signs in and pull from cloud
 			if (event === 'SIGNED_IN' && session?.user?.id) {
 				associateLocalDataWithUser(session.user.id).catch(console.error);
+				pullFromSupabase().catch(console.error);
 			}
 		});
 	}
