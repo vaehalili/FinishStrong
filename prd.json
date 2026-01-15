@@ -4,6 +4,20 @@
   "description": "Voice-first exercise tracker PWA with LLM parsing, historical data view, prompt logging, and authentication",
   "userStories": [
     {
+      "id": "fix-ui-2",
+      "title": "Fix input position on Log page",
+      "description": "Input area should be fixed at the bottom of the screen, not floating in the middle",
+      "acceptanceCriteria": [
+        "Input area stays fixed at bottom of viewport",
+        "Content area scrolls independently above input",
+        "Works on mobile viewport (375x812)",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Fixed by adding min-height:0 to .log-page, moving padding to .content, and making .input-area flex-shrink:0 with background color."
+    },
+    {
       "id": "setup-1",
       "title": "Project scaffolding",
       "description": "Create SvelteKit project with required dependencies",
@@ -15,7 +29,7 @@
         "Dev server runs without errors"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -29,7 +43,7 @@
         "PUBLIC_SUPABASE_ANON_KEY configured"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -43,7 +57,7 @@
         "TypeScript interfaces defined for all entities"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -56,7 +70,7 @@
         "Seeding only runs if exercises table is empty"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -70,7 +84,7 @@
         "Unit tests pass for all validators"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -86,7 +100,7 @@
         "Returns appropriate error for invalid input"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -100,7 +114,7 @@
         "Layout renders correctly on mobile viewport"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -115,7 +129,7 @@
         "Loading state shown during parse"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -129,7 +143,7 @@
         "Entries linked to active session"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -142,8 +156,8 @@
         "New session created after stale session ends"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented isSessionStale() with 2-hour threshold. getOrCreateActiveSession() now checks staleness and auto-ends stale sessions before creating new ones."
     },
     {
       "id": "ui-3",
@@ -156,8 +170,8 @@
         "Session card is expandable/collapsible"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created SessionCard component with collapsible entries. Log page now groups entries by session using Dexie liveQuery."
     },
     {
       "id": "offline-1",
@@ -169,8 +183,8 @@
         "State updates when network changes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created isOnline store using navigator.onLine with online/offline event listeners. Store wired to AppHeader via layout."
     },
     {
       "id": "offline-2",
@@ -182,8 +196,8 @@
         "Pending indicator shown for queued entries"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Queue module created with addToParseQueue, getPendingQueueItems, markQueueItemParsed, markQueueItemFailed. Log page checks isOnline store and queues input when offline. Pending items displayed with orange pulsing indicator."
     },
     {
       "id": "offline-3",
@@ -196,8 +210,8 @@
         "Failed parses mark item failed"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added processQueue() function to queue module. Log page subscribes to isOnline store and triggers queue processing when coming back online. Each pending item is sent through parse API, entries created on success, items marked parsed/failed accordingly."
     },
     {
       "id": "voice-1",
@@ -211,8 +225,8 @@
         "Works with continuous mode enabled"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added Web Speech API integration with mic button. Continuous mode enabled, interim results shown in input field, auto-submit on stop. TypeScript types added to app.d.ts for SpeechRecognition API."
     },
     {
       "id": "sync-1",
@@ -223,8 +237,8 @@
         "Client accessible from lib module"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created src/lib/supabase/client.ts with Supabase client using PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY from $env/static/public. Exported from src/lib/supabase/index.ts."
     },
     {
       "id": "sync-2",
@@ -232,13 +246,13 @@
       "description": "Sync unsynced records to Supabase",
       "acceptanceCriteria": [
         "Batch upsert for sessions, entries, exercises",
-        "Only unsynced records pushed",
+        "Only unsynced records pushed (using synced=0 index query)",
         "Synced flag set to true after successful push",
         "Exercises only synced if referenced by entries"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created src/lib/supabase/sync.ts with pushToSupabase(), debouncedSync(), and helper functions. Uses snake_case column mapping, queries unsynced records via synced=0 index, syncs exercises/sessions/entries in order, marks synced=true after successful push. 2000ms debounce prevents excessive API calls."
     },
     {
       "id": "sync-3",
@@ -251,8 +265,8 @@
         "Local records updated with remote data"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented pullFromSupabase() with lastPull timestamp tracking in localStorage. Uses gt(updated_at) query for incremental pulls. Last-write-wins via updatedAt comparison before put()."
     },
     {
       "id": "sync-4",
@@ -264,8 +278,8 @@
         "Sync triggers on data changes"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Integrated debouncedSync() (2-second debounce, syncInProgress guard) into data mutation points: entries.ts (updateEntry, deleteEntry), sessions.ts (createSession, endSession, updateSession), +page.svelte (after adding entries), queue/index.ts (after processing queue items)."
     },
     {
       "id": "query-1",
@@ -278,8 +292,8 @@
         "Validates query length"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created POST /api/query endpoint that accepts { query, entries }, sends question + workout history to Claude Haiku, validates query length (max 500 chars), and returns { success: true, answer: string }."
     },
     {
       "id": "query-2",
@@ -293,8 +307,8 @@
         "Offline warning shown when disconnected"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Ask page with text input, voice input (Web Speech API), answer display, 4 suggested questions as quick buttons, and offline warning banner. Uses LIMITS.QUERY_MAX_LENGTH for validation."
     },
     {
       "id": "dashboard-1",
@@ -307,8 +321,8 @@
         "This week's workouts count"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created dashboard page with 4 stat cards: Total Workouts (sessions count), Total Exercises (entries count), Unique Exercises (distinct exerciseIds), This Week (sessions from Monday onward). Uses Dexie liveQuery for reactive updates. 2x2 grid layout with orange highlight on This Week card."
     },
     {
       "id": "dashboard-2",
@@ -321,8 +335,8 @@
         "Chart updates when exercise selection changes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created ProgressChart component with SVG line chart. Dropdown filters exercises with weight data. Chart shows max weight per date with orange styling. Component integrated into Dashboard page."
     },
     {
       "id": "dashboard-3",
@@ -334,8 +348,8 @@
         "SVG-based chart"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created FrequencyChart component with SVG bar chart. Shows last 8 weeks of workout data with bar heights proportional to workout count. Current week highlighted in orange, other weeks in gray. Integrated into Dashboard page."
     },
     {
       "id": "export-1",
@@ -347,8 +361,8 @@
         "Download buttons on Dashboard"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created src/lib/export/index.ts with exportToCSV, exportToJSON, downloadCSV, downloadJSON functions. Added export buttons to Dashboard page below charts section."
     },
     {
       "id": "edit-1",
@@ -361,8 +375,8 @@
         "Entry updates in database and UI"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created updateEntry function in src/lib/db/entries.ts. Updated SessionCard with Edit button, inline edit form with Weight/Unit/Reps/Sets fields, and Save/Cancel buttons. Verified in browser - editing works correctly."
     },
     {
       "id": "edit-2",
@@ -374,8 +388,8 @@
         "Deletion synced to Supabase"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added deleteEntry function to entries.ts. SessionCard now has X button next to Edit button. Dexie delete removes from IndexedDB and liveQuery reactively updates UI."
     },
     {
       "id": "edit-3",
@@ -387,8 +401,8 @@
         "Session updates in database and UI"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added Edit button to session header with modal form. Created updateSession function in sessions.ts. Modal has fields for name, date, and notes with proper styling."
     },
     {
       "id": "edit-4",
@@ -401,8 +415,8 @@
         "Deletion synced to Supabase"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added deleteSession function that deletes entries by sessionId first, then deletes the session. Two-step confirmation: Delete button shows Confirm/Cancel on click, Confirm executes the delete."
     },
     {
       "id": "edit-5",
@@ -414,8 +428,8 @@
         "Session moves from active to history"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added End Session button (green) visible only when session.endedAt is null. Click calls endSession(sessionId) which sets endedAt timestamp. Session reactively updates in UI via liveQuery."
     },
     {
       "id": "history-1",
@@ -428,8 +442,8 @@
         "Today button to quickly return to current date"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created viewingDate store with goToPreviousDay, goToNextDay, goToToday, goToDate methods. Updated AppHeader with nav buttons, date picker popup, and conditional Today button."
     },
     {
       "id": "history-2",
@@ -442,8 +456,8 @@
         "Sessions load from local database"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Updated Log page to subscribe to viewingDate store. Created loadDataForDate function that recreates liveQuery subscriptions when date changes. Empty state message updated to 'No exercises logged for this date'."
     },
     {
       "id": "history-3",
@@ -456,8 +470,8 @@
         "viewingDate store tracks current context date"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "handleSubmit now uses currentViewingDate instead of hardcoded today. getOrCreateActiveSession called with viewing date, enabling backdating forgotten workouts."
     },
     {
       "id": "history-4",
@@ -469,8 +483,8 @@
         "Session date matches the viewing date, not current time"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "getOrCreateActiveSession already supports any date parameter. Now called with currentViewingDate, creating sessions for past dates with time-based naming."
     },
     {
       "id": "promptlog-1",
@@ -482,8 +496,8 @@
         "Table accessible for inserts from API"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created promptLog.ts module with logPromptRequest function. Migration SQL in supabase/migrations/001_create_prompt_logs.sql with RLS policies allowing inserts."
     },
     {
       "id": "promptlog-2",
@@ -496,8 +510,8 @@
         "Failed logs do not break the parse endpoint"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Integrated logPromptRequest into /api/parse. Logs fire-and-forget with .catch(console.error) so they never block. Logs on success, validation failure, JSON parse failure, and general errors."
     },
     {
       "id": "promptlog-3",
@@ -510,8 +524,8 @@
         "No custom UI needed in app"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Supabase Dashboard bypasses RLS via service_role. Table has indexes for timestamp (DESC) and success columns for efficient sorting/filtering. Updated migration with documentation."
     },
     {
       "id": "auth-1",
@@ -523,8 +537,8 @@
         "Environment variables set for auth"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created auth store in src/lib/stores/auth.ts with initialize(), signUp(), signIn(), signOut() methods. Auth state tracked with user, session, and loading. Derived stores isAuthenticated and isAuthLoading exported. Supabase client already supports auth via existing configuration."
     },
     {
       "id": "auth-2",
@@ -538,8 +552,8 @@
         "Redirect to Log page after successful auth"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created /login page with mode toggle for login/signup. Email/password fields with validation. Error message display in red banner. Loading spinner on submit button. $effect redirect to / when authenticated."
     },
     {
       "id": "auth-3",
@@ -552,8 +566,8 @@
         "Protected routes redirect to login if not authenticated"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Supabase handles token persistence in localStorage and auto-refresh. Added auth.initialize() in layout's onMount. Logout button in header. Protected routes via $effect redirect to /login when not authenticated."
     },
     {
       "id": "auth-4",
@@ -566,8 +580,8 @@
         "Existing local data associated with user on first login"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added userId to Dexie schema v2. createSession and getOrCreateActiveSession now accept userId. getCurrentUserId helper added to auth store. Log page and queue module set userId on entry/session creation. associateLocalDataWithUser function claims orphaned local records on login."
     },
     {
       "id": "auth-5",
@@ -580,8 +594,8 @@
         "Sync respects user isolation"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "RLS migration in 002_enable_rls.sql with policies for SELECT/INSERT/UPDATE/DELETE on sessions and entries tables using auth.uid() = user_id. Sync functions now check authentication before push/pull to respect RLS."
     },
     {
       "id": "test-1",
@@ -594,8 +608,8 @@
         "All tests pass"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Already implemented in validation-1 iteration. 37 tests covering input length, bounds checking, and LLM response schema validation - all passing."
     },
     {
       "id": "test-2",
@@ -608,8 +622,8 @@
         "Callable via window.generateMockData()"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created mockData.ts with generateMockData() and clearMockData(). Uses workout templates (Push/Pull/Leg/Upper/Lower/Full Body). Exposed on window via layout onMount. Also added window.clearMockData() for cleanup."
     }
   ]
 }

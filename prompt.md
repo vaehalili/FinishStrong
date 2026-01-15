@@ -2,6 +2,19 @@
 
 You are an autonomous coding agent working on a software project.
 
+## CRITICAL: Workspace Boundaries
+
+You MUST only read, write, and modify files within this project directory:
+`/Users/drew/Desktop/Personal Projects/FinishStrong/`
+
+Do NOT access, read, or modify:
+- Any files outside this project folder
+- Home directory files (~/.ssh, ~/.config, ~/.env, etc.)
+- System files
+- Other projects
+
+If a task seems to require accessing files outside this folder, skip it and note the issue in progress.txt.
+
 ## Your Task
 
 1. Read the PRD at `prd.json` (in the same directory as this file)
@@ -85,18 +98,29 @@ Only update AGENTS.md if you have **genuinely reusable knowledge** that would he
 For any story that changes UI, you MUST verify it works in the browser:
 
 1. Load the `dev-browser` skill
-2. Navigate to the relevant page
-3. Verify the UI changes work as expected
-4. Take a screenshot if helpful for the progress log
+2. Start the browser server with headless flag: `./skills/dev-browser/server.sh --headless &`
+3. Navigate to the relevant page
+4. Verify the UI changes work as expected
+5. Take a screenshot if helpful for the progress log
 
 A frontend story is NOT complete until browser verification passes.
 
 ## Stop Condition
 
-After completing a user story, check if ALL stories have `passes: true`.
+After completing a user story, you MUST verify completion status using this exact command:
 
-If ALL stories are complete and passing, reply with:
-<promise>COMPLETE</promise>
+```bash
+jq '[.userStories[] | select(.passes == false)] | length' prd.json
+```
+
+This returns the count of incomplete stories. 
+
+**CRITICAL:** Before declaring COMPLETE, you MUST:
+1. Run the jq command above
+2. If count > 0, list the incomplete story IDs and continue to the next iteration
+3. Only if count == 0, reply with: `<promise>COMPLETE</promise>`
+
+Do NOT trust your memory or assumptions about the PRD state. Always verify with jq.
 
 If there are still stories with `passes: false`, end your response normally (another iteration will pick up the next story).
 
