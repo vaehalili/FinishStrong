@@ -636,3 +636,21 @@ Thread: https://ampcode.com/threads/T-019bbf3d-ce52-714a-9f5b-cf7e407f265d
   - Sync operations must check authentication status before calling Supabase
   - Exercises are shared across users, so they use public read access
 ---
+
+## 2026-01-16 - ui-polish-1
+Thread: https://ampcode.com/threads/T-019bc5b9-7e52-733f-bdc4-a243bec56942
+- Implemented comprehensive UI visual polish across all pages
+- Added CSS design tokens in app.css: --space-xs/sm/md/lg/xl, --shadow-sm/md/lg, --radius-sm/md/lg
+- Updated TabNav with SVG icons: dumbbell for Log, speech bubble for Ask, bar chart for Dashboard
+- Enhanced SessionCard with box-shadow, subtle borders, larger session names (font-weight 700)
+- Entry details now display in orange accent color for visual pop
+- Input areas across Log/Ask pages: larger padding, distinct background (--bg-dark), focus glow effect
+- Consistent 8/16/24px spacing scale applied via CSS variables
+- All buttons have hover transitions and shadow effects
+- Verified all 3 pages on mobile viewport (375x812) via dev-browser skill
+- **Learnings for future iterations:**
+  - CSS custom properties (design tokens) make consistent spacing easy
+  - Use rgba() for subtle borders instead of solid colors for depth
+  - SVG icons scale better than emoji and allow proper color inheritance
+  - Input focus states need both border-color AND box-shadow for proper accessibility
+---
