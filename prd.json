@@ -624,6 +624,23 @@
       "priority": 9,
       "passes": true,
       "notes": "Created mockData.ts with generateMockData() and clearMockData(). Uses workout templates (Push/Pull/Leg/Upper/Lower/Full Body). Exposed on window via layout onMount. Also added window.clearMockData() for cleanup."
-    }
+    },
+    {
+  "id": "ui-polish-1",
+  "title": "UI visual polish and hierarchy",
+  "description": "Redesign the UI to feel more engaging and polished, like an app people enjoy opening",
+  "acceptanceCriteria": [
+    "Clear visual hierarchy: primary content (exercise names, stats) stands out from secondary content (metadata, labels)",
+    "Depth: cards have box-shadow, not just flat borders",
+    "Spacing: consistent rhythm using 8/16/24px scale with breathing room between sections",
+    "Typography: at least 2 distinct weights (bold for headings, regular for body) and 2 sizes per screen",
+    "Input area: visually prominent with larger height, distinct background color, and inviting placeholder text",
+    "Icons: tab bar uses SVG icons (Lucide or Heroicons) instead of emoji",
+    "Verify all 3 pages (Log, Ask, Dashboard) in mobile viewport (375x812)"
+  ],
+  "priority": 10,
+  "passes": false,
+  "notes": "Human vibe-check after technical criteria pass"
+}
   ]
 }

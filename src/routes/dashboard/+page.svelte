@@ -110,7 +110,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		padding: 1rem;
+		padding: var(--space-md);
 		overflow-y: auto;
 	}
 
@@ -118,34 +118,38 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+		gap: var(--space-lg);
 	}
 
 	.section-title {
 		color: var(--text-primary);
-		font-size: 1.25rem;
-		font-weight: 600;
-		margin-bottom: 1rem;
+		font-size: 1.375rem;
+		font-weight: 700;
+		margin-bottom: var(--space-md);
+		letter-spacing: -0.01em;
 	}
 
 	.stats-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		gap: 1rem;
-		margin-bottom: 1.5rem;
+		gap: var(--space-md);
 	}
 
 	.stat-card {
 		background-color: var(--bg-dark);
-		border-radius: 12px;
-		padding: 1.25rem;
+		border-radius: var(--radius-lg);
+		padding: var(--space-lg);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		text-align: center;
+		box-shadow: var(--shadow-md);
+		border: 1px solid rgba(255, 255, 255, 0.05);
 	}
 
 	.stat-card.highlight {
 		background-color: var(--orange-accent);
+		box-shadow: 0 4px 16px rgba(251, 146, 60, 0.3);
 	}
 
 	.stat-card.highlight .stat-value,
@@ -154,53 +158,62 @@
 	}
 
 	.stat-value {
-		font-size: 2rem;
-		font-weight: 700;
+		font-size: 2.5rem;
+		font-weight: 800;
 		color: var(--text-primary);
 		line-height: 1;
+		letter-spacing: -0.02em;
 	}
 
 	.stat-label {
-		font-size: 0.875rem;
+		font-size: 0.8125rem;
+		font-weight: 600;
 		color: var(--text-muted);
-		margin-top: 0.5rem;
+		margin-top: var(--space-sm);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
 	}
 
 	.empty-state {
 		color: var(--text-muted);
-		font-size: 1rem;
+		font-size: 1.125rem;
 		text-align: center;
-		margin-top: 2rem;
+		margin-top: var(--space-xl);
+		line-height: 1.6;
 	}
 
 	.export-section {
-		margin-top: 1.5rem;
+		margin-top: var(--space-lg);
 	}
 
 	.export-buttons {
 		display: flex;
-		gap: 1rem;
+		gap: var(--space-md);
 	}
 
 	.export-btn {
 		flex: 1;
-		padding: 0.875rem 1rem;
+		padding: var(--space-md);
 		background-color: var(--bg-dark);
 		border: 1px solid var(--bg-medium);
-		border-radius: 8px;
+		border-radius: var(--radius-md);
 		color: var(--text-primary);
-		font-size: 0.875rem;
-		font-weight: 500;
+		font-size: 0.9375rem;
+		font-weight: 600;
 		cursor: pointer;
-		transition: background-color 0.2s;
+		transition: all 0.15s ease;
+		box-shadow: var(--shadow-sm);
 	}
 
 	.export-btn:hover {
 		background-color: var(--bg-medium);
+		border-color: var(--orange-accent);
+		transform: translateY(-1px);
 	}
 
 	.export-btn:active {
 		background-color: var(--orange-accent);
 		color: var(--bg-darkest);
+		transform: translateY(0);
 	}
 </style>

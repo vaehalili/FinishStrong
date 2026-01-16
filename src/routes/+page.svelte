@@ -332,50 +332,52 @@
 	.content {
 		flex: 1;
 		overflow-y: auto;
-		padding: 1rem;
-		padding-bottom: 0;
+		padding: var(--space-md);
+		padding-bottom: var(--space-sm);
 	}
 
 	.empty-state {
 		color: var(--text-muted);
-		font-size: 1rem;
+		font-size: 1.125rem;
 		text-align: center;
-		margin-top: 4rem;
+		margin-top: 5rem;
+		line-height: 1.6;
 	}
 
 	.sessions-list {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: var(--space-md);
 	}
 
 	.pending-section {
-		margin-bottom: 1rem;
+		margin-bottom: var(--space-md);
 	}
 
 	.pending-header {
 		color: var(--orange-accent);
-		font-size: 0.875rem;
-		font-weight: 600;
-		margin: 0 0 0.5rem 0;
+		font-size: 0.75rem;
+		font-weight: 700;
+		margin: 0 0 var(--space-sm) 0;
 		text-transform: uppercase;
-		letter-spacing: 0.05em;
+		letter-spacing: 0.08em;
 	}
 
 	.pending-item {
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem 1rem;
+		gap: var(--space-md);
+		padding: var(--space-md);
 		background: var(--bg-dark);
-		border: 1px solid var(--bg-medium);
-		border-radius: 0.5rem;
-		margin-bottom: 0.5rem;
+		border: 1px solid rgba(251, 146, 60, 0.2);
+		border-radius: var(--radius-md);
+		margin-bottom: var(--space-sm);
+		box-shadow: var(--shadow-sm);
 	}
 
 	.pending-indicator {
-		width: 0.5rem;
-		height: 0.5rem;
+		width: 10px;
+		height: 10px;
 		background: var(--orange-accent);
 		border-radius: 50%;
 		flex-shrink: 0;
@@ -383,8 +385,8 @@
 	}
 
 	.pending-text {
-		color: var(--text-muted);
-		font-size: 0.875rem;
+		color: var(--text-secondary);
+		font-size: 0.9375rem;
 		font-style: italic;
 	}
 
@@ -400,39 +402,48 @@
 	.error-message {
 		color: var(--red-destructive);
 		font-size: 0.875rem;
-		padding: 0.75rem 1rem;
-		margin: 0 1rem;
+		font-weight: 500;
+		padding: var(--space-md);
+		margin: 0 var(--space-md);
 		background: rgba(248, 113, 113, 0.1);
-		border-radius: 0.5rem;
+		border-radius: var(--radius-md);
+		border: 1px solid rgba(248, 113, 113, 0.2);
 		flex-shrink: 0;
 	}
 
 	.input-area {
 		display: flex;
-		gap: 0.5rem;
-		padding: 1rem;
+		gap: var(--space-sm);
+		padding: var(--space-md);
+		padding-top: var(--space-lg);
+		padding-bottom: var(--space-lg);
 		border-top: 1px solid var(--bg-medium);
-		background: var(--bg-darkest);
+		background: var(--bg-dark);
 		flex-shrink: 0;
+		box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
 	}
 
 	.input-area input {
 		flex: 1;
-		padding: 0.875rem 1rem;
-		background: var(--bg-dark);
-		border: 1px solid var(--bg-medium);
-		border-radius: 0.5rem;
+		padding: 1rem 1.125rem;
+		background: var(--bg-darkest);
+		border: 2px solid var(--bg-medium);
+		border-radius: var(--radius-md);
 		color: var(--text-primary);
-		font-size: 1rem;
+		font-size: 1.0625rem;
+		font-weight: 500;
+		transition: border-color 0.15s ease, box-shadow 0.15s ease;
 	}
 
 	.input-area input:focus {
 		outline: none;
 		border-color: var(--orange-accent);
+		box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.15);
 	}
 
 	.input-area input::placeholder {
 		color: var(--text-muted);
+		font-weight: 400;
 	}
 
 	.input-area input:disabled {
@@ -441,21 +452,22 @@
 
 	.mic-btn {
 		position: relative;
-		padding: 0.875rem 1rem;
-		background: var(--bg-dark);
-		border: 1px solid var(--bg-medium);
-		border-radius: 0.5rem;
+		padding: 1rem 1.125rem;
+		background: var(--bg-darkest);
+		border: 2px solid var(--bg-medium);
+		border-radius: var(--radius-md);
 		font-size: 1.25rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-width: 3.5rem;
+		min-width: 56px;
 		cursor: pointer;
-		transition: background-color 0.2s, border-color 0.2s;
+		transition: all 0.15s ease;
 	}
 
 	.mic-btn:hover:not(:disabled) {
 		border-color: var(--orange-accent);
+		background: rgba(251, 146, 60, 0.1);
 	}
 
 	.mic-btn:disabled {
@@ -472,7 +484,7 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		border-radius: 0.5rem;
+		border-radius: var(--radius-md);
 		background: var(--orange-accent);
 		opacity: 0.3;
 		animation: mic-pulse-anim 1s ease-out infinite;
@@ -490,17 +502,19 @@
 	}
 
 	.submit-btn {
-		padding: 0.875rem 1.25rem;
+		padding: 1rem 1.25rem;
 		background: var(--green-primary);
 		border: none;
-		border-radius: 0.5rem;
+		border-radius: var(--radius-md);
 		color: white;
-		font-size: 1.25rem;
-		font-weight: 600;
-		min-width: 3.5rem;
+		font-size: 1.375rem;
+		font-weight: 700;
+		min-width: 60px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		box-shadow: var(--shadow-md);
+		transition: all 0.15s ease;
 	}
 
 	.submit-btn:disabled {
@@ -510,12 +524,18 @@
 
 	.submit-btn:not(:disabled):hover {
 		background: #16a34a;
+		transform: translateY(-1px);
+		box-shadow: var(--shadow-lg);
+	}
+
+	.submit-btn:not(:disabled):active {
+		transform: translateY(0);
 	}
 
 	.spinner {
 		width: 1.25rem;
 		height: 1.25rem;
-		border: 2px solid transparent;
+		border: 2.5px solid transparent;
 		border-top-color: white;
 		border-radius: 50%;
 		animation: spin 0.8s linear infinite;

@@ -254,8 +254,10 @@
 <style>
 	.session-card {
 		background: var(--bg-dark);
-		border-radius: 0.75rem;
+		border-radius: var(--radius-lg);
 		overflow: hidden;
+		box-shadow: var(--shadow-md);
+		border: 1px solid rgba(255, 255, 255, 0.05);
 	}
 
 	.session-header {
@@ -263,33 +265,36 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		padding: 1rem;
+		padding: var(--space-md);
 		background: none;
 		border: none;
 		cursor: pointer;
 		text-align: left;
 		color: var(--text-primary);
+		transition: background-color 0.15s ease;
 	}
 
 	.session-header:hover {
-		background: var(--bg-medium);
+		background: rgba(255, 255, 255, 0.03);
 	}
 
 	.session-info {
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
+		gap: var(--space-xs);
 	}
 
 	.session-name {
-		font-weight: 600;
-		font-size: 1rem;
+		font-weight: 700;
+		font-size: 1.125rem;
 		color: var(--text-primary);
+		letter-spacing: -0.01em;
 	}
 
 	.session-date {
-		font-size: 0.75rem;
+		font-size: 0.8125rem;
 		color: var(--text-muted);
+		font-weight: 500;
 	}
 
 	.expand-icon {
@@ -303,31 +308,33 @@
 	}
 
 	.session-entries {
-		border-top: 1px solid var(--bg-medium);
-		padding: 0.75rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.06);
+		padding: var(--space-md);
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: var(--space-sm);
 	}
 
 	.no-entries {
 		color: var(--text-muted);
 		font-size: 0.875rem;
 		text-align: center;
-		padding: 0.5rem;
+		padding: var(--space-md);
 	}
 
 	.entry-card {
 		background: var(--bg-darkest);
-		border-radius: 0.5rem;
-		padding: 0.75rem;
+		border-radius: var(--radius-md);
+		padding: var(--space-md);
+		box-shadow: var(--shadow-sm);
+		border: 1px solid rgba(255, 255, 255, 0.03);
 	}
 
 	.entry-content {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 0.5rem;
+		gap: var(--space-sm);
 	}
 
 	.entry-info {
@@ -336,26 +343,29 @@
 	}
 
 	.entry-name {
-		font-weight: 600;
-		font-size: 0.9375rem;
-		margin-bottom: 0.125rem;
+		font-weight: 700;
+		font-size: 1rem;
+		margin-bottom: var(--space-xs);
+		color: var(--text-primary);
 	}
 
 	.entry-details {
-		color: var(--text-secondary);
-		font-size: 0.8125rem;
+		color: var(--orange-accent);
+		font-size: 0.9375rem;
+		font-weight: 600;
 	}
 
 	.btn-edit {
-		padding: 0.375rem 0.75rem;
+		padding: var(--space-sm) var(--space-md);
 		font-size: 0.75rem;
-		font-weight: 500;
+		font-weight: 600;
 		background: var(--bg-medium);
 		color: var(--text-secondary);
 		border: none;
-		border-radius: 0.375rem;
+		border-radius: var(--radius-sm);
 		cursor: pointer;
 		flex-shrink: 0;
+		transition: all 0.15s ease;
 	}
 
 	.btn-edit:hover {
@@ -365,19 +375,20 @@
 
 	.entry-actions {
 		display: flex;
-		gap: 0.5rem;
+		gap: var(--space-sm);
 		flex-shrink: 0;
 	}
 
 	.btn-delete {
-		padding: 0.375rem 0.5rem;
+		padding: var(--space-sm) 10px;
 		font-size: 0.75rem;
-		font-weight: 500;
+		font-weight: 600;
 		background: transparent;
 		color: var(--text-muted);
 		border: 1px solid var(--bg-medium);
-		border-radius: 0.375rem;
+		border-radius: var(--radius-sm);
 		cursor: pointer;
+		transition: all 0.15s ease;
 	}
 
 	.btn-delete:hover {

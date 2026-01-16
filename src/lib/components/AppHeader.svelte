@@ -111,32 +111,34 @@
     align-items: center;
     background-color: var(--bg-dark);
     border-bottom: 1px solid var(--bg-medium);
-    padding: 0.75rem 1rem;
-    padding-top: calc(0.75rem + env(safe-area-inset-top, 0px));
+    padding: var(--space-sm) var(--space-md);
+    padding-top: calc(var(--space-sm) + env(safe-area-inset-top, 0px));
     z-index: 100;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   }
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     flex-shrink: 0;
   }
 
   .logo {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
   }
 
   .title {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.0625rem;
+    font-weight: 700;
     color: var(--text-primary);
+    letter-spacing: -0.01em;
   }
 
   .header-center {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--space-xs);
     flex: 1;
     justify-content: center;
   }
@@ -146,30 +148,31 @@
     border: none;
     color: var(--text-primary);
     font-size: 1rem;
-    width: 2rem;
-    height: 2rem;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: all 0.15s ease;
   }
 
   .nav-btn:hover {
-    background-color: var(--bg-darkest);
+    background-color: rgba(251, 146, 60, 0.2);
+    color: var(--orange-accent);
   }
 
   .date-display {
     background: none;
     border: none;
     color: var(--text-primary);
-    font-size: 0.875rem;
-    font-weight: 500;
-    padding: 0.375rem 0.5rem;
-    border-radius: 0.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    padding: var(--space-sm) var(--space-sm);
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.15s ease;
   }
 
   .date-display:hover {
@@ -180,27 +183,30 @@
     background: var(--orange-accent);
     border: none;
     color: var(--bg-darkest);
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    margin-left: 0.25rem;
+    margin-left: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    transition: all 0.15s ease;
   }
 
   .today-btn:hover {
-    opacity: 0.9;
+    transform: scale(1.05);
   }
 
   .header-right {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
     flex-shrink: 0;
   }
 
   .status {
-    font-size: 0.75rem;
+    font-size: 0.625rem;
   }
 
   .status.offline {
@@ -212,18 +218,19 @@
     border: none;
     color: var(--text-primary);
     font-size: 1rem;
-    width: 2rem;
-    height: 2rem;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: all 0.15s ease;
   }
 
   .logout-btn:hover {
-    background-color: var(--bg-darkest);
+    background-color: rgba(248, 113, 113, 0.2);
+    color: var(--red-destructive);
   }
 
   @keyframes pulse {
@@ -237,7 +244,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -246,19 +253,21 @@
 
   .date-picker-modal {
     background: var(--bg-dark);
-    padding: 1.5rem;
-    border-radius: 0.5rem;
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
     border: 1px solid var(--bg-medium);
+    box-shadow: var(--shadow-lg);
   }
 
   .date-input {
     background: var(--bg-medium);
-    border: 1px solid var(--bg-darkest);
+    border: 2px solid var(--bg-darkest);
     color: var(--text-primary);
-    padding: 0.75rem;
-    border-radius: 0.25rem;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
     font-size: 1rem;
     cursor: pointer;
+    transition: border-color 0.15s ease;
   }
 
   .date-input:focus {
